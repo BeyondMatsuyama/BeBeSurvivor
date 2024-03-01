@@ -20,7 +20,7 @@ public class Player : BaseCharacter
     private bool isWalking = false;
 
     // 移動速度の係数
-    private readonly float moveSpeed = 0.005f;
+    private readonly float moveSpeed = 0.01f;
 
     // フレームワーク
     private void Update()

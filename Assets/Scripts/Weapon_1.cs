@@ -47,13 +47,13 @@ public class Weapon_1 : MonoBehaviour
             if(enemy)   // エネミーが存在する場合
             {
                 dir = enemy.transform.position - playerController.GetPosition();
+                playerController.SetDirection(dir.normalized);   // プレイヤーの向きを設定
             }
             else        // エネミーが存在しない場合
             {
                 dir = playerController.GetDirection();
             }
-            // プレイヤーの向きを設定
-            playerController.SetDirection(dir.normalized);
+
             // 弾発射
             fire(dir.normalized);
         }

@@ -55,7 +55,7 @@ public class Bullet : MonoBehaviour
             if (collision.GetComponent<Enemy>().CurStatus == Enemy.Status.Alive)
             {
                 Destroy(this.gameObject);
-                Debug.Log("Bullet Hit + " + collision.name);
+                // Debug.Log("Bullet Hit + " + collision.name);
             }
         }
     }
