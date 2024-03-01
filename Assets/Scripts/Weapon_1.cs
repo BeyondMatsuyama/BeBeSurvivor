@@ -9,6 +9,8 @@ public class Weapon_1 : MonoBehaviour
 {
     // プレイヤー制御
     [SerializeField] private PlayerController playerController;
+    // エネミー制御
+    [SerializeField] private EnemyController enemyController;
 
     // 弾のプレハブ
     [SerializeField] private GameObject bulletPrefab;
@@ -38,13 +40,27 @@ public class Weapon_1 : MonoBehaviour
         {
             // インターバルタイマー初期化
             intervalTimer = 0;
+
+            // 射程内のエネミーに向けて弾発射
+            var enemy = enemyController.GetNearestEnemy(playerController.GetPosition(), range[level]);
+            Vector2 dir;
+            if(enemy)   // エネミーが存在する場合
+            {
+                dir = enemy.transform.position - playerController.GetPosition();
+            }
+            else        // エネミーが存在しない場合
+            {
+                dir = playerController.GetDirection();
+            }
+            // プレイヤーの向きを設定
+            playerController.SetDirection(dir.normalized);
             // 弾発射
-            fire();
+            fire(dir.normalized);
         }
     }
 
     // 弾発射
-    private void fire()
+    private void fire(Vector2 dir)
     {
         // 同時発射数分発射
         for (int i = 0; i < simultaneous[level]; i++)
@@ -52,8 +68,9 @@ public class Weapon_1 : MonoBehaviour
             // 弾の生成
             GameObject bullet = Instantiate(bulletPrefab, bulletParent);
             // 弾の初期化
-            bullet.GetComponent<Bullet>().Initialize(playerController.GetPosition(), playerController.GetDirection(), range[level]);            
+            bullet.GetComponent<Bullet>().Initialize(playerController.GetPosition(), dir, range[level]);
         }
     }
+
 
 }

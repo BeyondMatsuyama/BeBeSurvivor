@@ -539,6 +539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 386879982}
+  enemyController: {fileID: 365266726}
   bulletPrefab: {fileID: 3122305301416456328, guid: 9ca5f53c2d1c24172a404748b495d8fe, type: 3}
   bulletParent: {fileID: 1534346491}
 --- !u!4 &1055049790

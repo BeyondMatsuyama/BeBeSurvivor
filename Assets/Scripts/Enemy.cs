@@ -28,10 +28,10 @@ public class Enemy : BaseCharacter
     private NockBack nockBack;
 
     // プレイヤーの位置からエネミーの方向を決定する
-    public void SetDirection(Vector3 playerPos)
+    public void SetEnemyDirection(Vector3 playerPos)
     {
         Vector2 dir = (playerPos - this.transform.position).normalized;
-        setDirection(dir);
+        SetDirection(dir);
     }
 
     /// <summary>

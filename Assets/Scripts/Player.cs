@@ -64,7 +64,7 @@ public class Player : BaseCharacter
         this.transform.localPosition    = pos;
 
         // 移動する方向に応じて向きを変える
-        setDirection(dir);
+        SetDirection(dir);
     }
 
     /// <summary>
