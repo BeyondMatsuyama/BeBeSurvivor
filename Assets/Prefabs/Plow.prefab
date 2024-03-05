@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3854868961506305269}
   - component: {fileID: 4322208231088035517}
   - component: {fileID: 4539916660265384383}
+  - component: {fileID: 5850047847816274165}
   m_Layer: 0
   m_Name: Plow
   m_TagString: Weapon
@@ -148,3 +149,15 @@ CircleCollider2D:
   m_Offset: {x: 0.20000008, y: -0.05000009}
   serializedVersion: 2
   m_Radius: 0.5000001
+--- !u!114 &5850047847816274165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9193252990838036264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bcbb6318bbbe4d97a8f0359b081a5d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
