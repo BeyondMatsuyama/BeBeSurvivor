@@ -18,13 +18,15 @@ public class Weapon_1 : MonoBehaviour
     [SerializeField] private Transform bulletParent;
 
     // 弾の発射間隔（３レベル）
-    private readonly float[] interval = { 1.5f, 1.0f, 0.5f };
+    private readonly float[] interval = { 1.5f, 1.2f, 1.0f };
     // 弾の射程（３レベル）
     private readonly float[] range = { 4.0f, 6.0f, 8.0f };
     // 同時発射数（３レベル）
-    private readonly int[] simultaneous = { 1, 2, 3 };
+    private readonly int[] simultaneous = { 1, 3, 5 };
+    // 発射角度（5方向：simultaneous の数に依存する）
+    private readonly float[] angle = { 0, 10, -10, 20, -20 };
 
-    // 武器レベル
+    // レベル
     private int level = 0;
 
     // インターバルタイマー
@@ -65,12 +67,21 @@ public class Weapon_1 : MonoBehaviour
         // 同時発射数分発射
         for (int i = 0; i < simultaneous[level]; i++)
         {
+            // 発射角度に応じて dir を変更
+            Vector2 d = Quaternion.Euler(0, 0, angle[i]) * dir;
+
             // 弾の生成
             GameObject bullet = Instantiate(bulletPrefab, bulletParent);
             // 弾の初期化
-            bullet.GetComponent<Bullet>().Initialize(playerController.GetPosition(), dir, range[level]);
+            bullet.GetComponent<Bullet>().Initialize(playerController.GetPosition(), d, range[level]);
         }
     }
 
+    // レベルアップ
+    public void LevelUp()
+    {
+        // レベルアップ
+        level = Mathf.Min(level + 1, WeaponController.maxLevel - 1);
+    }
 
 }
