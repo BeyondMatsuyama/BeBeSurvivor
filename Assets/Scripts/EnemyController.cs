@@ -14,7 +14,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private GameObject parent;
 
     private const float spawnRadius = 5.0f;
-    private const float spawnInterval = 3.0f;
+    private const float spawnInterval = 1.0f;
+    private const int MAX_ENEMYS = 5;
 
     private List<GameObject> enemies = new List<GameObject>();
 
@@ -34,8 +35,8 @@ public class EnemyController : MonoBehaviour
         var waitTime = new WaitForSeconds(spawnInterval);
         while(true)
         {
-            // 常に2対のエネミーが存在するように生成する
-            if(enemies.Count < 2)
+            // 常に MAX体のエネミーが存在するように生成する
+            if(enemies.Count < MAX_ENEMYS)
             {
                 // ランダムな位置に生成
                 Vector2 pos = new Vector2(UnityEngine.Random.Range(-spawnRadius, spawnRadius), UnityEngine.Random.Range(-spawnRadius, spawnRadius));
@@ -46,7 +47,7 @@ public class EnemyController : MonoBehaviour
                 enemies.Add(enemy.gameObject);
 
                 // エネミーの向きを設定
-                enemy.GetComponent<Enemy>().SetDirection(playerController.GetPosition());
+                enemy.GetComponent<Enemy>().SetEnemyDirection(playerController.GetPosition());
 
                 // エネミーの削除を監視し、削除されたらリストから削除
                 enemy.GetComponent<Enemy>().OnDead.AddListener(() => Remove(enemy));
@@ -63,5 +64,35 @@ public class EnemyController : MonoBehaviour
     {
         enemies.Remove(enemy);
     }
+
+    /// <summary>
+    /// プレイヤー位置から最も近いくかつ、射程距離内のエネミーを取得
+    /// </summary>
+    /// <param name="pos">プレイヤー位置</param>
+    /// <param name="range">射程距離</param>
+    /// <returns>エネミーオブジェクト</returns>
+    public GameObject GetNearestEnemy(Vector3 pos, float range)
+    {
+        GameObject nearest = null;
+        float min = float.MaxValue;
+        foreach(var enemy in enemies)
+        {
+            // エネミーが死んでいる場合は無視
+            if(enemy.GetComponent<Enemy>().CurStatus == Enemy.Status.Dead) continue;
+            // プレイヤーとエネミーの距離を計算
+            float dist = Vector3.Distance(pos, enemy.transform.position);
+            if(dist < min)
+            {
+                min = dist;
+                nearest = enemy;
+            }
+        }
+        if(min < range)
+        {
+            return nearest;
+        }
+        return null;
+    }
+
 
 }

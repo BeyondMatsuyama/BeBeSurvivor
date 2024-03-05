@@ -9,6 +9,8 @@ public class Weapon_1 : MonoBehaviour
 {
     // プレイヤー制御
     [SerializeField] private PlayerController playerController;
+    // エネミー制御
+    [SerializeField] private EnemyController enemyController;
 
     // 弾のプレハブ
     [SerializeField] private GameObject bulletPrefab;
@@ -16,17 +18,33 @@ public class Weapon_1 : MonoBehaviour
     [SerializeField] private Transform bulletParent;
 
     // 弾の発射間隔（３レベル）
-    private readonly float[] interval = { 1.5f, 1.0f, 0.5f };
+    private readonly float[] interval = { 1.5f, 1.2f, 1.0f };
     // 弾の射程（３レベル）
     private readonly float[] range = { 4.0f, 6.0f, 8.0f };
     // 同時発射数（３レベル）
-    private readonly int[] simultaneous = { 1, 2, 3 };
-
-    // 武器レベル
-    private int level = 0;
+    private readonly int[] simultaneous = { 1, 3, 5 };
+    // 発射角度（5方向：simultaneous の数に依存する）
+    private readonly float[] angle = { 0, 10, -10, 20, -20 };
 
     // インターバルタイマー
     private float intervalTimer = 0;
+
+    // レベル
+    private int level = 0;
+    // レベル取得
+    public int GetLevel() { return level; }
+    // レベルアップ
+    public void LevelUp()
+    {
+        // レベルアップ
+        level = Mathf.Min(level + 1, WeaponController.maxLevel - 1);
+    }
+    // レベルダウン
+    public void LevelDown()
+    {
+        // レベルダウン
+        level = Mathf.Max(level - 1, 0);
+    }
 
     // フレームワーク
     private void Update()
@@ -38,22 +56,44 @@ public class Weapon_1 : MonoBehaviour
         {
             // インターバルタイマー初期化
             intervalTimer = 0;
+
+            // 射程内のエネミーに向けて弾発射
+            var enemy = enemyController.GetNearestEnemy(playerController.GetPosition(), range[level]);
+            Vector2 dir;
+            if(enemy)   // エネミーが存在する場合
+            {
+                dir = enemy.transform.position - playerController.GetPosition();
+                playerController.SetDirection(dir.normalized);   // プレイヤーの向きを設定
+            }
+            else        // エネミーが存在しない場合
+            {
+                dir = playerController.GetDirection();
+            }
+
             // 弾発射
-            fire();
+            fire(dir.normalized);
         }
     }
 
-    // 弾発射
-    private void fire()
+    /// <summary>
+    /// 球発射
+    /// </summary>
+    /// <param name="dir">ベースの発射方向</param>
+    private void fire(Vector2 dir)
     {
         // 同時発射数分発射
         for (int i = 0; i < simultaneous[level]; i++)
         {
+            // 発射角度に応じて dir を変更
+            Vector2 d = Quaternion.Euler(0, 0, angle[i]) * dir;
+
             // 弾の生成
             GameObject bullet = Instantiate(bulletPrefab, bulletParent);
             // 弾の初期化
-            bullet.GetComponent<Bullet>().Initialize(playerController.GetPosition(), playerController.GetDirection(), range[level]);            
+            bullet.GetComponent<Bullet>().Initialize(playerController.GetPosition(), d, range[level]);
         }
     }
+
+
 
 }

@@ -34,7 +34,7 @@ public class BaseCharacter : MonoBehaviour
     /// dir に応じてオブジェクトの向きを設定
     /// </summary>
     /// <param name="dir">向き</param>
-    protected void setDirection(Vector2 dir)
+    public void SetDirection(Vector2 dir)
     {
         if(dir.x > 0) this.transform.localRotation = Quaternion.Euler(0, 0, 0);
         if(dir.x < 0) this.transform.localRotation = Quaternion.Euler(0, 180, 0);

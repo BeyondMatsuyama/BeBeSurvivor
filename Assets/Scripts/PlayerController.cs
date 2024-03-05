@@ -40,4 +40,13 @@ public class PlayerController : MonoBehaviour
         return player.Direction;
     }
 
+    /// <summary>
+    /// プレイヤーの向きを設定
+    /// </summary>
+    /// <param name="dir">向き</param>
+    public void SetDirection(Vector2 dir)
+    {
+        player.SetDirection(dir);
+    }
+
 }
