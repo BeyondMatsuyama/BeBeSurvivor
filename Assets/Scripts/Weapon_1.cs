@@ -26,11 +26,25 @@ public class Weapon_1 : MonoBehaviour
     // 発射角度（5方向：simultaneous の数に依存する）
     private readonly float[] angle = { 0, 10, -10, 20, -20 };
 
-    // レベル
-    private int level = 0;
-
     // インターバルタイマー
     private float intervalTimer = 0;
+
+    // レベル
+    private int level = 0;
+    // レベル取得
+    public int GetLevel() { return level; }
+    // レベルアップ
+    public void LevelUp()
+    {
+        // レベルアップ
+        level = Mathf.Min(level + 1, WeaponController.maxLevel - 1);
+    }
+    // レベルダウン
+    public void LevelDown()
+    {
+        // レベルダウン
+        level = Mathf.Max(level - 1, 0);
+    }
 
     // フレームワーク
     private void Update()
@@ -61,7 +75,10 @@ public class Weapon_1 : MonoBehaviour
         }
     }
 
-    // 弾発射
+    /// <summary>
+    /// 球発射
+    /// </summary>
+    /// <param name="dir">ベースの発射方向</param>
     private void fire(Vector2 dir)
     {
         // 同時発射数分発射
@@ -77,11 +94,6 @@ public class Weapon_1 : MonoBehaviour
         }
     }
 
-    // レベルアップ
-    public void LevelUp()
-    {
-        // レベルアップ
-        level = Mathf.Min(level + 1, WeaponController.maxLevel - 1);
-    }
+
 
 }
