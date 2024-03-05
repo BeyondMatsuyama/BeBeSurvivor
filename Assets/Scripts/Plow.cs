@@ -9,19 +9,25 @@ using UnityEngine;
 /// </summary>
 public class Plow : MonoBehaviour
 {
+/*    
     void Start()
     {
         Initialize(
             new Vector3(0f, 0, 0),
-            new Vector3(1f, 30, 0),
-            new Vector3(2f, -10, 0)
+            new Vector3(-1f, 25, 0),
+            new Vector3(-2f, -10, 0)
         );
     }
-
+*/
     // 生存フラグ
     private bool isAlive = true;
     // ヒット数
     private int hitCount = 3;
+
+    // 左右向き
+    private int course = 0; // 0:右、1:左
+    private float[] courseGoal = { -90, 270 };
+
 
     /// <summary>
     ///  初期化
@@ -31,6 +37,9 @@ public class Plow : MonoBehaviour
     /// <param name="p2">終点</param>
     public void Initialize(Vector3 p0, Vector3 p1, Vector3 p2)
     {
+        // もし、p0 より p2 が左にあるなら、左向きにする
+        if (p0.x > p2.x) course = 1;
+        // 放物線を描く（コルーチン）
         StartCoroutine(Throw(p0, p1, p2));
     }
 
@@ -53,6 +62,13 @@ public class Plow : MonoBehaviour
             transform.position = new Vector3 (Vx, Vy, 0);
 
             t += 1 / distance / speed * Time.deltaTime;
+
+            // t が 0.4 から 0.6 の間に、徐々に180°回転させる
+            if (t > 0.4f && t < 0.6f)
+            {
+                float angle = Mathf.Lerp(90, courseGoal[course], (t - 0.4f) / 0.2f);
+                transform.rotation = Quaternion.Euler(0, 0, angle);
+            }
 
             yield return null;
         }
