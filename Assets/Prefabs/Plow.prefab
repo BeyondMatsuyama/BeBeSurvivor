@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4322208231088035517}
   - component: {fileID: 4539916660265384383}
   m_Layer: 0
-  m_Name: Weapon_1
+  m_Name: Plow
   m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
