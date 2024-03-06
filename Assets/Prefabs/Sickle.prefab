@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1561429822502233149}
   - component: {fileID: 1482558153878562568}
   - component: {fileID: 8588129571662490371}
+  - component: {fileID: 4173894813721425014}
   m_Layer: 0
   m_Name: Sickle
   m_TagString: Weapon
@@ -148,3 +149,15 @@ CircleCollider2D:
   m_Offset: {x: 0.19999993, y: -0.05000008}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &4173894813721425014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3040417762749310419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 245667e6aa2e14327b3f8a78fc5dd15d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

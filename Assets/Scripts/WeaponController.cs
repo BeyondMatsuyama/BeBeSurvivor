@@ -37,6 +37,8 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private Weapon_1 weapon_1;
     // 武器２（すき）
     [SerializeField] private Weapon_2 weapon_2;
+    // 武器３（鎌）
+    [SerializeField] private Weapon_3 weapon_3;
 
     /// <summary>
     /// 開始時処理
@@ -67,6 +69,27 @@ public class WeaponController : MonoBehaviour
             setWeapon2Level();
         });
 
+        // 武器３のボタンイベント設定
+        weaponInterface[(int)WeaponType.Weapon_3].btnDown.onClick.AddListener(() =>
+        {
+            // レベルダウン（非アクティブの場合は何もしない）
+            if (weapon_3.IsActive())
+            {
+                weapon_3.LevelDown();
+                weapon_3.CreateAndInitialize(playerController.GetPlayer());
+                setWeapon3Level();
+            }
+        });
+        weaponInterface[(int)WeaponType.Weapon_3].btnUp.onClick.AddListener(() =>
+        {
+            // 非アクティブの場合はアクティブ化
+            if (!weapon_3.IsActive())   weapon_3.Activate();
+            // レベルアップ
+            else                        weapon_3.LevelUp();
+            weapon_3.CreateAndInitialize(playerController.GetPlayer());
+            setWeapon3Level();
+        });
+
     }
 
     /// <summary>
@@ -82,4 +105,11 @@ public class WeaponController : MonoBehaviour
     {
         weaponInterface[(int)WeaponType.Weapon_2].txtLevel.text = (weapon_2.GetLevel() + 1).ToString();  // 表示はプラス１する
     }
+
+    // 武器３のレベル表示
+    private void setWeapon3Level()
+    {
+        weaponInterface[(int)WeaponType.Weapon_3].txtLevel.text = (weapon_3.GetLevel() + 1).ToString();  // 表示はプラス１する
+    }
+
 }
