@@ -14,8 +14,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private GameObject parent;
 
     private const float spawnRadius = 5.0f;
-    private const float spawnInterval = 1.0f;
-    private const int MAX_ENEMYS = 5;
+    private const float spawnInterval = 0.5f;
+    private const int MAX_ENEMYS = 20;
 
     private List<GameObject> enemies = new List<GameObject>();
 
