@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// すき（農具）
-/// 実装にあたり Hatena Blog 様の記事を参考にしました
+/// 実装にあたり Hatena Blog 様の記事を参考にさせていただきました
 /// https://robamemo.hatenablog.com/entry/2017/09/01/114748
 /// </summary>
 public class Plow : MonoBehaviour

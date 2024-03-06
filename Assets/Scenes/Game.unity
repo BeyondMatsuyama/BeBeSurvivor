@@ -1461,6 +1461,7 @@ MonoBehaviour:
     txtLevel: {fileID: 1249577204}
   playerController: {fileID: 386879982}
   weapon_1: {fileID: 1055049789}
+  weapon_2: {fileID: 864418275}
 --- !u!4 &682825269
 Transform:
   m_ObjectHideFlags: 0

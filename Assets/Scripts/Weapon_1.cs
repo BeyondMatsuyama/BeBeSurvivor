@@ -16,9 +16,23 @@ public class Weapon_1 : WeaponBase
     // 発射角度（5方向：simultaneous の数に依存する）
     private readonly float[] angle = { 0, 10, -10, 20, -20 };
 
-    // フレームワーク
-    private void Update()
+    /// <summary>
+    /// 起動時処理
+    /// </summary>
+    void Start()
     {
+        // デフォルトでアクティブ状態
+        Activate();
+    }
+
+    /// <summary>
+    /// フレームワーク
+    /// </summary>
+    void Update()
+    {
+        // アクティブでない場合は処理しない
+        if (!isActive) return;
+
         // インターバルタイマー更新
         intervalTimer += Time.deltaTime;
         // インターバルチェック

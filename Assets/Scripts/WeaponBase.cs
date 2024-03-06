@@ -12,7 +12,6 @@ public class WeaponBase : MonoBehaviour
     // エネミー制御
     [SerializeField] protected EnemyController enemyController;
 
-
     // 武器のプレハブ
     [SerializeField] protected GameObject prefab;
     // オブジェクトを配置する親オブジェクト
@@ -37,5 +36,13 @@ public class WeaponBase : MonoBehaviour
 
     // インターバルタイマー
     protected float intervalTimer = 0;
+
+    // アクティブフラグ
+    protected bool isActive = false;
+    // アクティブであるか
+    public bool IsActive() { return isActive; }
+    // アクティブ化
+    public void Activate() { isActive = true; }
+
 
 }
