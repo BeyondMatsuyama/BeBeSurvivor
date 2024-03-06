@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
 {
     // プレイヤー
     [SerializeField] private Player player;
+    // プレイヤーの取得
+    public Player GetPlayer() { return player; }
+    
     // 武器管理
     [SerializeField] private WeaponController weaponController;
 

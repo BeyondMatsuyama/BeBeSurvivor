@@ -1462,6 +1462,7 @@ MonoBehaviour:
   playerController: {fileID: 386879982}
   weapon_1: {fileID: 1055049789}
   weapon_2: {fileID: 864418275}
+  weapon_3: {fileID: 1360534124}
 --- !u!4 &682825269
 Transform:
   m_ObjectHideFlags: 0
@@ -2416,6 +2417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1360534123}
+  - component: {fileID: 1360534124}
   m_Layer: 0
   m_Name: weapon_3
   m_TagString: Untagged
@@ -2439,6 +2441,22 @@ Transform:
   - {fileID: 1509225102}
   m_Father: {fileID: 682825269}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1360534124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360534122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6859ccae1e649462abe282b4344a3c43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 386879982}
+  enemyController: {fileID: 365266726}
+  prefab: {fileID: 3040417762749310419, guid: 3bbbe70dd5c7542a9b86212897b539e2, type: 3}
+  parent: {fileID: 1509225102}
 --- !u!1 &1451293196
 GameObject:
   m_ObjectHideFlags: 0
