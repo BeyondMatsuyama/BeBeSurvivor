@@ -26,7 +26,7 @@ public class Plow : MonoBehaviour
 
     // 左右向き
     private int course = 0; // 0:右、1:左
-    private float[] courseGoal = { -90, 270 };
+    private float[] courseGoal = { -180, 180 };
 
 
     /// <summary>
@@ -66,7 +66,7 @@ public class Plow : MonoBehaviour
             // t が 0.4 から 0.6 の間に、徐々に180°回転させる
             if (t > 0.4f && t < 0.6f)
             {
-                float angle = Mathf.Lerp(90, courseGoal[course], (t - 0.4f) / 0.2f);
+                float angle = Mathf.Lerp(0, courseGoal[course], (t - 0.4f) / 0.2f);
                 transform.rotation = Quaternion.Euler(0, 0, angle);
             }
 
