@@ -55,17 +55,16 @@ public class Weapon_2 : WeaponBase
 
             // 始点（プレイヤー位置）
             Vector3 p0 = playerController.GetPosition();
-            // 頂点
+            // 頂点（相対座標）
             float c = UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;                     // 向き（左右）
             float w = UnityEngine.Random.Range(minWidth, maxWidth[GetLevel()]) * c;     // 幅
             float h = height + UnityEngine.Random.Range(0, rndHeight);                  // 高さ
-            Vector3 p1 = new Vector3(p0.x + (w / 2f), p0.y + h, 0);
-            // 終点
-            Vector3 p2 = new Vector3(p0.x + w, p0.y + endHeight, 0);
+            Vector3 p1 = new Vector3((w / 2f), h, 0);
+            // 終点（相対座標）
+            Vector3 p2 = new Vector3( w, endHeight, 0);
 
             // 生成
             GameObject obj = Instantiate(prefab, parent);
-            // obj.transform.Rotate(0, 0, 90); // 90°回転（絵の向きの都合）
 
             // 初期化
             obj.GetComponent<Plow>().Initialize(p0, p1, p2);

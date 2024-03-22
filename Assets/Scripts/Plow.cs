@@ -47,12 +47,12 @@ public class Plow : MonoBehaviour
     /// 放物線を描く
     /// </summary>
     /// <param name="p0">始点</param>
-    /// <param name="p1">頂点</param>
-    /// <param name="p2">終点</param>
+    /// <param name="p1">頂点（相対座標）</param>
+    /// <param name="p2">終点（相対座標）</param>
     /// <returns>コルーチン</returns>
     IEnumerator Throw (Vector3 p0, Vector3 p1, Vector3 p2)
     {
-       float distance = Vector3.Distance(p0, p2);
+       float distance = Vector3.Distance(Vector3.zero, p2);
        float speed = 0.3f;
 
        float t = 0f;
