@@ -18,7 +18,7 @@ public class Sickle : MonoBehaviour
     // 半径
     public const float Radius = 4.0f;
     // 回転速度（秒間）
-    private const float RotateSpeed = 270f;
+    private const float RotateSpeed = 90f;
     // 自転速度（秒間）
     private const float SpinSpeed   = 1080f;
 
