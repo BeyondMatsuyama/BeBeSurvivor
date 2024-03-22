@@ -11,11 +11,27 @@ public class Enemy : BaseCharacter
     // ステータス
     public enum Status
     {
-        Alive = 0,
+        Init = 0,
+        Alive,
         Dead
     }
-    private Status status = Status.Alive;
+    private Status status = Status.Init;
     public Status CurStatus { get => status; }
+
+    // 歩きパラメータ
+    private const float MinInterval = 1.0f;
+    private const float MaxInterval = 5.0f;
+    private const float WalkSpeed = 0.5f;
+
+    // 歩き情報
+    private struct Walk
+    {
+        public float interval;
+        public float timer;
+        public Vector2 course;
+        public Player player;
+    }
+    private Walk walkInfo;
 
     // ノックバック情報
     private struct NockBack
@@ -27,13 +43,6 @@ public class Enemy : BaseCharacter
     }
     private NockBack nockBack;
 
-    // プレイヤーの位置からエネミーの方向を決定する
-    public void SetEnemyDirection(Vector3 playerPos)
-    {
-        Vector2 dir = (playerPos - this.transform.position).normalized;
-        SetDirection(dir);
-    }
-
     /// <summary>
     /// フレームワーク
     /// </summary>
@@ -41,7 +50,10 @@ public class Enemy : BaseCharacter
     {
         switch(status)
         {
+            case Status.Init:
+                break;
             case Status.Alive:
+                walk();
                 break;
             case Status.Dead:
                 // 死亡アニメーション中
@@ -56,13 +68,54 @@ public class Enemy : BaseCharacter
     }
 
     /// <summary>
+    /// 初期化
+    /// </summary>
+    public void Init(Player player)
+    {
+        // 歩き情報を設定
+        walkInfo.interval = Random.Range(MinInterval, MaxInterval);
+        walkInfo.timer = walkInfo.interval;
+        walkInfo.player = player;
+        // プレイヤー位置に向かって歩く
+        setWalkDirection();
+
+        status = Status.Alive;        
+    }
+
+    /// <summary>
+    /// 歩く
+    /// </summary>
+    private void walk()
+    {
+        // 歩く
+        this.transform.localPosition += new Vector3(walkInfo.course.x * WalkSpeed * Time.deltaTime, walkInfo.course.y * WalkSpeed * Time.deltaTime, 0);
+        // タイマー更新
+        walkInfo.timer -= Time.deltaTime;
+        // タイマーが０以下になったら再設定
+        if(walkInfo.timer < 0)
+        {
+            walkInfo.timer = walkInfo.interval;
+            setWalkDirection();
+        }
+    }
+
+    /// <summary>
+    /// 歩く方向を決定する
+    /// </summary>
+    private void setWalkDirection()
+    {
+        walkInfo.course = (walkInfo.player.Position - this.transform.position).normalized;
+        SetDirection(walkInfo.course);
+    }
+
+    /// <summary>
     /// コライダーが当たったら最初に呼ばれる
     /// </summary>
     /// <param name="collision">相手側の情報が格納される</param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 死んでいる場合は無視
-        if (status == Status.Dead) return;
+        if (status == Status.Init || status == Status.Dead) return;
 
         // Weapon に当たったら消滅
         if (collision.tag == "Weapon")
