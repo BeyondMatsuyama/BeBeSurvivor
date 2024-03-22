@@ -47,7 +47,7 @@ public class EnemyController : MonoBehaviour
                 enemies.Add(enemy.gameObject);
 
                 // エネミーの向きを設定
-                enemy.GetComponent<Enemy>().SetEnemyDirection(playerController.GetPosition());
+                enemy.GetComponent<Enemy>().Init(playerController.GetPlayer());
 
                 // エネミーの削除を監視し、削除されたらリストから削除
                 enemy.GetComponent<Enemy>().OnDead.AddListener(() => Remove(enemy));
