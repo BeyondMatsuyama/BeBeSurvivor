@@ -29,10 +29,10 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     private IEnumerator spawnBase()
     {
-        const int MAX_BASE_ENEMYS  = 20;
+        const int MAX_BASE_ENEMYS  = 50;
         const float spawnRadiusMin = 5.0f;
         const float spawnRadiusMax = 10.0f;
-        const float spawnInterval  = 1f;
+        const float spawnInterval  = 0.5f;
         var waitTime = new WaitForSeconds(spawnInterval);
         while(true)
         {
@@ -55,7 +55,7 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator spawnWave()
     {
-        const float spawnInterval = 20;
+        const float spawnInterval = 10;
         const float MaxSpawnNum = 200;
         var waitTime = new WaitForSeconds(spawnInterval);
         int wave = 0;

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// 鎌（農具）
@@ -18,7 +19,7 @@ public class Sickle : MonoBehaviour
     // 半径
     public const float Radius = 4.0f;
     // 回転速度（秒間）
-    private const float RotateSpeed = 90f;
+    private const float RotateSpeed = 180f;
     // 自転速度（秒間）
     private const float SpinSpeed   = 1080f;
 
@@ -69,5 +70,21 @@ public class Sickle : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, 0.0f, spinAngle);
     }
 
+    /// <summary>
+    /// コライダーが当たったら最初に呼ばれる
+    /// </summary>
+    /// <param name="collision">相手側の情報が格納される</param>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Enemy に当たったら消滅
+        if (collision.tag == "Enemy")
+        {
+            // 親オブジェクトへ通知
+            OnHit.Invoke();
+        }
+    }
+
+    // ヒット時に呼ばれるイベント
+    public UnityEvent OnHit = new UnityEvent();
 
 }
