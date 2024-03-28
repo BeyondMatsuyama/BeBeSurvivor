@@ -9,6 +9,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private ExpController expController;
 
     [SerializeField] private GameObject[] enemyPrefabs;
     [SerializeField] private GameObject parent;
@@ -32,7 +33,7 @@ public class EnemyController : MonoBehaviour
         const int MAX_BASE_ENEMYS  = 50;
         const float spawnRadiusMin = 5.0f;
         const float spawnRadiusMax = 10.0f;
-        const float spawnInterval  = 0.5f;
+        const float spawnInterval  = 1f;
         var waitTime = new WaitForSeconds(spawnInterval);
         while(true)
         {
@@ -107,7 +108,7 @@ public class EnemyController : MonoBehaviour
         enemies.Add(enemy.gameObject);
 
         // エネミーの向きを設定
-        enemy.GetComponent<Enemy>().Init(playerController.GetPlayer());
+        enemy.GetComponent<Enemy>().Init(playerController.GetPlayer(), expController);
 
         // エネミーの削除を監視し、削除されたらリストから削除
         enemy.GetComponent<Enemy>().OnDead.AddListener(() => Remove(enemy));
@@ -119,7 +120,7 @@ public class EnemyController : MonoBehaviour
     /// <param name="enemy">エネミーオブジェクト</param>
     public void Remove(GameObject enemy)
     {
-        enemies.Remove(enemy);
+        enemies.Remove(enemy);        
     }
 
     /// <summary>

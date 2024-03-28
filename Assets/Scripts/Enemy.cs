@@ -43,6 +43,8 @@ public class Enemy : BaseCharacter
     }
     private NockBack nockBack;
 
+    private ExpController expController;
+
     /// <summary>
     /// フレームワーク
     /// </summary>
@@ -70,8 +72,10 @@ public class Enemy : BaseCharacter
     /// <summary>
     /// 初期化
     /// </summary>
-    public void Init(Player player)
+    public void Init(Player player, ExpController expController)
     {
+        this.expController = expController;
+
         // 歩き情報を設定
         walkInfo.interval = Random.Range(MinInterval, MaxInterval);
         walkInfo.timer = walkInfo.interval;
@@ -149,7 +153,11 @@ public class Enemy : BaseCharacter
     public void OnAnimationEnd()
     {
         // 死亡アニメーションが終わったら消滅
-        if (status == Status.Dead) Destroy(this.gameObject);
+        if (status == Status.Dead) 
+        {
+            expController.Spawn(this.transform.position);
+            Destroy(this.gameObject);
+        }
     }
 
     // 死亡（GameObject 破棄）時に呼ばれるイベント
