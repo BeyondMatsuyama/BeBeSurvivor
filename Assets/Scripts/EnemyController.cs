@@ -16,6 +16,8 @@ public class EnemyController : MonoBehaviour
 
     private List<GameObject> enemies = new List<GameObject>();
 
+    private int no = 0;
+
     /// <summary>
     /// 起動時処理
     /// </summary>
@@ -31,7 +33,7 @@ public class EnemyController : MonoBehaviour
     private IEnumerator spawnBase()
     {
         const int MAX_BASE_ENEMYS  = 50;
-        const float spawnRadiusMin = 5.0f;
+        const float spawnRadiusMin = 8.0f;
         const float spawnRadiusMax = 10.0f;
         const float spawnInterval  = 1f;
         var waitTime = new WaitForSeconds(spawnInterval);
@@ -58,6 +60,7 @@ public class EnemyController : MonoBehaviour
     {
         const float spawnInterval = 10;
         const float MaxSpawnNum = 200;
+        const float spawnRadiusMax = 12.0f;
         var waitTime = new WaitForSeconds(spawnInterval);
         int wave = 0;
         while(true)
@@ -68,9 +71,6 @@ public class EnemyController : MonoBehaviour
                 float spawnNum = Mathf.Min(wave * 10, MaxSpawnNum);
                 // 等間隔に配置
                 float angleRange = 360 / spawnNum;
-                // 配置半径
-                float radiusBase = 7;
-
                 // プレイヤー位置
                 Vector2 playerPos = playerController.GetPlayer().Position;
 
@@ -78,7 +78,7 @@ public class EnemyController : MonoBehaviour
                 for(int i = 0; i < spawnNum; i++)
                 {
                     // 配置半径を決定
-                    float r = radiusBase + UnityEngine.Random.Range(-1.0f, 1.0f);
+                    float r = spawnRadiusMax + UnityEngine.Random.Range(-1.0f, 1.0f);
                     // 配置角度を決定
                     float angle = angleRange * i;
 
@@ -99,13 +99,17 @@ public class EnemyController : MonoBehaviour
     /// <param name="angle">配置角度</param>
     private void spawn(Vector2 playerPos, float r, float angle)
     {
+        no++;
+
         // プレイヤー位置を中心として、ランダムな位置に生成
         Vector2 pos = new Vector2(playerPos.x + r * Mathf.Cos(angle), playerPos.y + r * Mathf.Sin(angle));
 
         // ランダムなエネミーを生成
         GameObject enemy = Instantiate(enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)], pos, Quaternion.identity);
         enemy.transform.parent = parent.transform;
+        enemy.name = "Enemy_" + no;
         enemies.Add(enemy.gameObject);
+
 
         // エネミーの向きを設定
         enemy.GetComponent<Enemy>().Init(playerController.GetPlayer(), expController);
