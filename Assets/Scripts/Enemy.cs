@@ -18,6 +18,10 @@ public class Enemy : BaseCharacter
     private Status status = Status.Init;
     public Status CurStatus { get => status; }
 
+    // 討伐カウントフラグ
+    private bool isCounted = false;
+    public bool IsCounted { get => isCounted; set => isCounted = value;}
+
     // 歩きパラメータ
     private const float MinInterval = 1.0f;
     private const float MaxInterval = 5.0f;

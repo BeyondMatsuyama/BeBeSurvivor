@@ -8,7 +8,7 @@ using UnityEngine;
 public class Weapon_1 : WeaponBase
 {
     // 弾の発射間隔（３レベル）
-    private readonly float[] interval = { 1.5f, 1.25f, 1.0f };
+    private readonly float[] interval = { 2.0f, 1.75f, 1.5f };
     // 弾の射程（３レベル）
     private readonly float[] range = { 4.0f, 6.0f, 8.0f };
     // 同時発射数（３レベル）

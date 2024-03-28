@@ -51,9 +51,17 @@ public class Bullet : MonoBehaviour
         // Enemy に当たったら消滅
         if (collision.tag == "Enemy")
         {
-            // Enemy が生きていたら消滅
-            if (collision.GetComponent<Enemy>().CurStatus == Enemy.Status.Alive)
+            Enemy enemy = collision.GetComponent<Enemy>();
+            // 対象のエネミーが未カウントの場合
+            if (!enemy.IsCounted)            
             {
+                // デバッグログ（自オブジェクトとヒットしたオブジェクトの名称）
+                // Debug.Log(this.name + " Hit " + collision.name);
+
+                // カウント
+                enemy.IsCounted = true;
+
+                // 消滅
                 Destroy(this.gameObject);
                 // Debug.Log("Bullet Hit + " + collision.name);
             }

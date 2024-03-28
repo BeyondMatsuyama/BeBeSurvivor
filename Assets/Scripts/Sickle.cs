@@ -79,8 +79,18 @@ public class Sickle : MonoBehaviour
         // Enemy に当たったら消滅
         if (collision.tag == "Enemy")
         {
-            // 親オブジェクトへ通知
-            OnHit.Invoke();
+            Enemy enemy = collision.GetComponent<Enemy>();
+            // 対象のエネミーが未カウントの場合
+            if (!enemy.IsCounted)
+            {
+                // デバッグログ（自オブジェクトとヒットしたオブジェクトの名称）
+                // Debug.Log(this.name + " Hit " + collision.name);
+
+                // カウント
+                enemy.IsCounted = true;
+                // 親オブジェクトへ通知
+                OnHit.Invoke();
+            }
         }
     }
 
