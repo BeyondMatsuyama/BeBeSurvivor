@@ -18,6 +18,10 @@ public class Enemy : BaseCharacter
     private Status status = Status.Init;
     public Status CurStatus { get => status; }
 
+    // 討伐カウントフラグ
+    private bool isCounted = false;
+    public bool IsCounted { get => isCounted; set => isCounted = value;}
+
     // 歩きパラメータ
     private const float MinInterval = 1.0f;
     private const float MaxInterval = 5.0f;
@@ -42,6 +46,8 @@ public class Enemy : BaseCharacter
         public float timer;
     }
     private NockBack nockBack;
+
+    private ExpController expController;
 
     /// <summary>
     /// フレームワーク
@@ -70,8 +76,10 @@ public class Enemy : BaseCharacter
     /// <summary>
     /// 初期化
     /// </summary>
-    public void Init(Player player)
+    public void Init(Player player, ExpController expController)
     {
+        this.expController = expController;
+
         // 歩き情報を設定
         walkInfo.interval = Random.Range(MinInterval, MaxInterval);
         walkInfo.timer = walkInfo.interval;
@@ -87,6 +95,9 @@ public class Enemy : BaseCharacter
     /// </summary>
     private void walk()
     {
+        // ポーズ中は無視
+        if (GameController.isPause) return;
+
         // 歩く
         this.transform.localPosition += new Vector3(walkInfo.course.x * WalkSpeed * Time.deltaTime, walkInfo.course.y * WalkSpeed * Time.deltaTime, 0);
         // タイマー更新
@@ -149,7 +160,11 @@ public class Enemy : BaseCharacter
     public void OnAnimationEnd()
     {
         // 死亡アニメーションが終わったら消滅
-        if (status == Status.Dead) Destroy(this.gameObject);
+        if (status == Status.Dead) 
+        {
+            expController.Spawn(this.transform.position);
+            Destroy(this.gameObject);
+        }
     }
 
     // 死亡（GameObject 破棄）時に呼ばれるイベント

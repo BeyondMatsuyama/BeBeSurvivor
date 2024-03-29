@@ -12,6 +12,12 @@ public class GameController : MonoBehaviour
     [SerializeField] Camera mainCamera;
     // プレイヤー管理
     [SerializeField] PlayerController playerController;
+    // 武器管理
+    [SerializeField] WeaponController weaponController;
+    // 武器ボード
+    [SerializeField] WeaponBoard weaponBoard;
+    // 経験値管理
+    [SerializeField] ExpController expController;
     // フィールドワーク
     [SerializeField] FieldController fieldController;
 
@@ -24,19 +30,49 @@ public class GameController : MonoBehaviour
     // 長押し判定変数
     private float holdTime = HoldTime;
 
+    // 武器のレベルポイントが閾値を超えたら、武器レベルアップ（初期レベルは１で、９レベルまで）
+    private readonly int[] levelThreshold = { 0, 5, 10, 20, 30, 40, 60, 80, 100, 65535 };
+
+    // ポーズフラグ
+    public static bool isPause = false;
+    private int curLevelPoint = 0;
+
     /// <summary>
     /// フレームワーク
     /// </summary>
     void Update()
     {
-        // プレイヤー移動処理
-        if(onMove())
-        {
-            // カメラを追従させる
-            Vector3 pos = playerController.GetPosition();
-            pos.z = -1.0f;
-            mainCamera.gameObject.transform.localPosition = pos;
+        if(!isPause)
+        {        
+            // プレイヤー移動処理
+            if(onMove())
+            {
+                // カメラを追従させる
+                Vector3 pos = playerController.GetPosition();
+                pos.z = -1.0f;
+                mainCamera.gameObject.transform.localPosition = pos;
+            }
+
+            // 武器レベルアップ処理
+            if(expController.GetExpNum >= levelThreshold[weaponController.GetLevelPoint()])
+            {
+                // ポーズ
+                isPause = true;
+                // 現在のレベルポイントを保持
+                curLevelPoint = weaponController.GetLevelPoint();
+                // レベルアップボードを表示
+                weaponBoard.ShowBoard();
+            }
         }
+    }
+
+    // ポーズ解除
+    public void Resume()
+    {
+        // 経験値を保持したレベルポイント分減らす
+        expController.SubExpNum(levelThreshold[curLevelPoint]);
+        // ポーズ解除
+        isPause = false;
     }
 
     // 移動処理

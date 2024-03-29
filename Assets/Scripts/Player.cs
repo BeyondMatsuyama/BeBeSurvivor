@@ -20,7 +20,7 @@ public class Player : BaseCharacter
     private bool isWalking = false;
 
     // 移動速度の係数
-    private readonly float moveSpeed = 0.01f;
+    private readonly float moveSpeed = 2.5f;
 
     // フレームワーク
     private void Update()
@@ -53,7 +53,7 @@ public class Player : BaseCharacter
         isWalking = true;
 
         // 移動
-        Vector2 val = dir * moveSpeed;
+        Vector2 val = dir * (moveSpeed * Time.deltaTime);
         Vector3 pos = this.transform.localPosition + new Vector3(val.x, val.y, 0);
 
         // 移動範囲制限（FieldController で生成したフィールドの範囲）により、pos を制限

@@ -22,10 +22,22 @@ public class WeaponBase : MonoBehaviour
     // レベル取得
     public int GetLevel() { return level; }
     // レベルアップ
-    public void LevelUp()
+    public bool LevelUp()
     {
-        // レベルアップ
-        level = Mathf.Min(level + 1, WeaponController.maxLevel - 1);
+        // 非アクティブの場合はアクティブする
+        if(!isActive)
+        {
+            Activate();
+            return true;
+        }
+
+        // レベルアップ（レベルアップした場合はtrueを返す）
+        if(level < WeaponController.maxLevel - 1)
+        {
+            level++;
+            return true;
+        }
+        return false;
     }
     // レベルダウン
     public void LevelDown()
@@ -43,6 +55,16 @@ public class WeaponBase : MonoBehaviour
     public bool IsActive() { return isActive; }
     // アクティブ化
     public void Activate() { isActive = true; }
+
+    /// <summary>
+    /// レベルに応じたポイントの取得（表示用）
+    /// </summary>
+    /// <returns>レベルポイント</returns>
+    public int GetLevelPoint()
+    {
+        if(!isActive) return 0;
+        else return level + 1;
+    }
 
 
 }
