@@ -16,6 +16,11 @@ public class ExpController : MonoBehaviour
 
     private const float MoveThreshold = 2f;
 
+    // 経験値の取得数
+    private int expNum = 0;
+    public int GetExpNum { get { return expNum; } }
+    public void SubExpNum(int value) { expNum -= value; }
+
     /// <summary>
     /// exp オブジェクトを生成する
     /// </summary>
@@ -32,6 +37,7 @@ public class ExpController : MonoBehaviour
     /// <param name="exp">削除するオブジェクト</param>
     public void Remove(GameObject exp)
     {
+        expNum++;
         exps.Remove(exp);
     }
 

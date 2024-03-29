@@ -14,7 +14,7 @@ public class WeaponController : MonoBehaviour
         Weapon_1,   // 武器１（デフォルト武器）
         Weapon_2,   // 武器２
         Weapon_3,   // 武器３
-        Weapon_Num  // 武器数
+        Num         // 武器数
     }
 
     // 武器インターフェース
@@ -25,7 +25,7 @@ public class WeaponController : MonoBehaviour
         public Button btnUp;    // レベルアップボタン
         public Text txtLevel;   // レベル表示テキスト
     }
-    [SerializeField] private WeaponInterface[] weaponInterface = new WeaponInterface[(int)WeaponType.Weapon_Num];
+    [SerializeField] private WeaponInterface[] weaponInterface = new WeaponInterface[(int)WeaponType.Num];
 
     // 最大レベル
     public static readonly int maxLevel = 3;    
@@ -48,7 +48,8 @@ public class WeaponController : MonoBehaviour
         // 武器１のボタンイベント設定
         weaponInterface[(int)WeaponType.Weapon_1].btnDown.onClick.AddListener(() => { weapon_1.LevelDown(); setWeapon1Level(); } );
         weaponInterface[(int)WeaponType.Weapon_1].btnUp.onClick.AddListener(() => { weapon_1.LevelUp(); setWeapon1Level(); } );
-        setWeapon1Level();  // 初期レベル
+        weapon_1.Activate();    // アクティブ化
+        setWeapon1Level();      // 初期レベル
 
         // 武器２のボタンイベント設定
         weaponInterface[(int)WeaponType.Weapon_2].btnDown.onClick.AddListener(() =>
@@ -97,19 +98,68 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private void setWeapon1Level()
     {
-        weaponInterface[(int)WeaponType.Weapon_1].txtLevel.text = (weapon_1.GetLevel() + 1).ToString();  // 表示はプラス１する
+        weaponInterface[(int)WeaponType.Weapon_1].txtLevel.text = (weapon_1.GetLevelPoint()).ToString();  // 表示はプラス１する
     }
 
     // 武器２のレベル表示
     private void setWeapon2Level()
     {
-        weaponInterface[(int)WeaponType.Weapon_2].txtLevel.text = (weapon_2.GetLevel() + 1).ToString();  // 表示はプラス１する
+        weaponInterface[(int)WeaponType.Weapon_2].txtLevel.text = (weapon_2.GetLevelPoint()).ToString();  // 表示はプラス１する
     }
 
     // 武器３のレベル表示
     private void setWeapon3Level()
     {
-        weaponInterface[(int)WeaponType.Weapon_3].txtLevel.text = (weapon_3.GetLevel() + 1).ToString();  // 表示はプラス１する
+        weaponInterface[(int)WeaponType.Weapon_3].txtLevel.text = (weapon_3.GetLevelPoint()).ToString();  // 表示はプラス１する
+    }
+
+    /// <summary>
+    /// 全武器のレベルポイント取得
+    /// </summary>
+    /// <returns>レベルポイント</returns>
+    public int GetLevelPoint() { return weapon_1.GetLevelPoint() + weapon_2.GetLevelPoint() + weapon_3.GetLevelPoint();}
+
+    /// <summary>
+    /// 武器タイプごとのレベルポイント取得
+    /// </summary>
+    /// <param name="type">武器タイプ</param>
+    /// <returns>レベルポイント</returns>
+    public int GetLevelPointForWeapon(WeaponType type)
+    {
+        switch (type)
+        {
+            case WeaponType.Weapon_1:   return weapon_1.GetLevelPoint();
+            case WeaponType.Weapon_2:   return weapon_2.GetLevelPoint();
+            case WeaponType.Weapon_3:   return weapon_3.GetLevelPoint();
+        }
+        return 0;        
+    }
+
+    /// <summary>
+    /// レベルアップ処理
+    /// </summary>
+    /// <param name="type">武器タイプ</param>
+    /// <returns>レベルアップした場合は true を返す</returns>
+    public bool LevelUp(WeaponType type)
+    {
+        bool isLevelUp = false;
+        switch (type)
+        {
+            case WeaponType.Weapon_1:
+                isLevelUp = weapon_1.LevelUp();
+                setWeapon1Level();
+                break;
+            case WeaponType.Weapon_2:
+                isLevelUp = weapon_2.LevelUp();
+                setWeapon2Level();
+                break;
+            case WeaponType.Weapon_3:
+                isLevelUp = weapon_3.LevelUp();
+                weapon_3.CreateAndInitialize(playerController.GetPlayer());
+                setWeapon3Level();
+                break;
+        }
+        return isLevelUp;        
     }
 
 }
