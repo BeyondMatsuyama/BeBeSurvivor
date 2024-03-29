@@ -39,20 +39,28 @@ public class EnemyController : MonoBehaviour
         var waitTime = new WaitForSeconds(spawnInterval);
         while(true)
         {
-            // 常に MAX体のエネミーが存在するように生成する
-            if(enemies.Count < MAX_BASE_ENEMYS)
-            {
-                // プレイヤー位置
-                Vector2 playerPos = playerController.GetPlayer().Position;
-                // 配置半径を決定
-                float r = UnityEngine.Random.Range(spawnRadiusMin, spawnRadiusMax);
-                // 配置角度を決定
-                float angle = UnityEngine.Random.Range(0, 360);
+            // ポーズ中は無視
+            if (!GameController.isPause)
+            {            
+                // 常に MAX体のエネミーが存在するように生成する
+                if(enemies.Count < MAX_BASE_ENEMYS)
+                {
+                    // プレイヤー位置
+                    Vector2 playerPos = playerController.GetPlayer().Position;
+                    // 配置半径を決定
+                    float r = UnityEngine.Random.Range(spawnRadiusMin, spawnRadiusMax);
+                    // 配置角度を決定
+                    float angle = UnityEngine.Random.Range(0, 360);
 
-                // 生成
-                spawn(playerPos, r, angle);
+                    // 生成
+                    spawn(playerPos, r, angle);
+                }
+                yield return waitTime;
             }
-            yield return waitTime;
+            else
+            {
+                yield return null;
+            }
         }
     }
 
@@ -65,29 +73,37 @@ public class EnemyController : MonoBehaviour
         int wave = 0;
         while(true)
         {
-            if(wave > 0)
-            {
-                // 生成数を wave から決定（最大100体）
-                float spawnNum = Mathf.Min(wave * 10, MaxSpawnNum);
-                // 等間隔に配置
-                float angleRange = 360 / spawnNum;
-                // プレイヤー位置
-                Vector2 playerPos = playerController.GetPlayer().Position;
-
-                // 生成
-                for(int i = 0; i < spawnNum; i++)
+            // ポーズ中は無視
+            if (!GameController.isPause)
+            {                        
+                if(wave > 0)
                 {
-                    // 配置半径を決定
-                    float r = spawnRadiusMax + UnityEngine.Random.Range(-1.0f, 1.0f);
-                    // 配置角度を決定
-                    float angle = angleRange * i;
+                    // 生成数を wave から決定（最大100体）
+                    float spawnNum = Mathf.Min(wave * 10, MaxSpawnNum);
+                    // 等間隔に配置
+                    float angleRange = 360 / spawnNum;
+                    // プレイヤー位置
+                    Vector2 playerPos = playerController.GetPlayer().Position;
 
                     // 生成
-                    spawn(playerPos, r, angle);
+                    for(int i = 0; i < spawnNum; i++)
+                    {
+                        // 配置半径を決定
+                        float r = spawnRadiusMax + UnityEngine.Random.Range(-1.0f, 1.0f);
+                        // 配置角度を決定
+                        float angle = angleRange * i;
+
+                        // 生成
+                        spawn(playerPos, r, angle);
+                    }
                 }
+                wave++;
+                yield return waitTime;
             }
-            wave++;
-            yield return waitTime;
+            else
+            {
+                yield return null;
+            }
         }
     }
 

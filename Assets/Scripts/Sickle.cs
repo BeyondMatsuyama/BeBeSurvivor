@@ -48,6 +48,9 @@ public class Sickle : MonoBehaviour
     /// </summary>
     void Update()
     {
+        // ポーズ中は無視
+        if (GameController.isPause) return;
+
         // 角度（公転）を増加
         rotateAngle -= RotateSpeed * Time.deltaTime;
         // 角度（自転）を増加

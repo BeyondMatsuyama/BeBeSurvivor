@@ -95,6 +95,9 @@ public class Enemy : BaseCharacter
     /// </summary>
     private void walk()
     {
+        // ポーズ中は無視
+        if (GameController.isPause) return;
+
         // 歩く
         this.transform.localPosition += new Vector3(walkInfo.course.x * WalkSpeed * Time.deltaTime, walkInfo.course.y * WalkSpeed * Time.deltaTime, 0);
         // タイマー更新

@@ -32,7 +32,9 @@ public class Weapon_1 : WeaponBase
     {
         // アクティブでない場合は処理しない
         if (!isActive) return;
-
+        // ポーズ中は無視
+        if (GameController.isPause) return;
+        
         // インターバルタイマー更新
         intervalTimer += Time.deltaTime;
         // インターバルチェック

@@ -46,6 +46,9 @@ public class ExpController : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // ポーズ中は無視
+        if (GameController.isPause) return;
+
         Vector2 playerPos = playerController.GetPosition();
         foreach (var exp in exps)
         {

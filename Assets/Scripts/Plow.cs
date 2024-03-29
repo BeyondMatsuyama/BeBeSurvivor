@@ -57,19 +57,22 @@ public class Plow : MonoBehaviour
 
        float t = 0f;
         while (t <= 1 && isAlive) {
-            float Vx = 2 * (1f - t) * t * p1.x + Mathf.Pow (t, 2) * p2.x + p0.x;
-            float Vy = 2 * (1f - t) * t * p1.y + Mathf.Pow (t, 2) * p2.y + p0.y;
-            transform.position = new Vector3 (Vx, Vy, 0);
-
-            t += 1 / distance / speed * Time.deltaTime;
-
-            // t が 0.4 から 0.6 の間に、徐々に180°回転させる
-            if (t > 0.4f && t < 0.6f)
+            // ポーズ中は無視
+            if (!GameController.isPause)
             {
-                float angle = Mathf.Lerp(0, courseGoal[course], (t - 0.4f) / 0.2f);
-                transform.rotation = Quaternion.Euler(0, 0, angle);
-            }
+                float Vx = 2 * (1f - t) * t * p1.x + Mathf.Pow (t, 2) * p2.x + p0.x;
+                float Vy = 2 * (1f - t) * t * p1.y + Mathf.Pow (t, 2) * p2.y + p0.y;
+                transform.position = new Vector3 (Vx, Vy, 0);
 
+                t += 1 / distance / speed * Time.deltaTime;
+
+                // t が 0.4 から 0.6 の間に、徐々に180°回転させる
+                if (t > 0.4f && t < 0.6f)
+                {
+                    float angle = Mathf.Lerp(0, courseGoal[course], (t - 0.4f) / 0.2f);
+                    transform.rotation = Quaternion.Euler(0, 0, angle);
+                }
+            }
             yield return null;
         }
 

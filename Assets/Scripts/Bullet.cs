@@ -31,7 +31,9 @@ public class Bullet : MonoBehaviour
     private void Update()
     {
         if (!initialized) return;
-
+        // ポーズ中は無視
+        if (GameController.isPause) return;
+        
         // 移動
         Vector2 val = direction * (moveSpeed * Time.deltaTime);
         Vector3 pos = this.transform.localPosition + new Vector3(val.x, val.y, 0);
