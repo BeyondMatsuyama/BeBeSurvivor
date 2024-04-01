@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
 {
     // プレイヤー
     [SerializeField] private Player player;
+    // プレイヤーの取得
+    public Player GetPlayer() { return player; }
+    
     // 武器管理
     [SerializeField] private WeaponController weaponController;
 
@@ -38,6 +41,15 @@ public class PlayerController : MonoBehaviour
     public Vector2 GetDirection()
     {
         return player.Direction;
+    }
+
+    /// <summary>
+    /// プレイヤーの向きを設定
+    /// </summary>
+    /// <param name="dir">向き</param>
+    public void SetDirection(Vector2 dir)
+    {
+        player.SetDirection(dir);
     }
 
 }

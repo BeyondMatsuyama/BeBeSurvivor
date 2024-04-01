@@ -7,11 +7,8 @@ using static FieldController;
 /// <summary>
 /// プレイヤ制御
 /// </summary>
-public class Player : MonoBehaviour
+public class Player : BaseCharacter
 {
-    // アニメーション管理
-    private Animator animator;
-
     // ステータス
     private enum Status
     {
@@ -23,14 +20,7 @@ public class Player : MonoBehaviour
     private bool isWalking = false;
 
     // 移動速度の係数
-    private readonly float moveSpeed = 0.005f;
-    private Vector2 direction = new Vector2(1, 0);
-
-    // 起動時処理(初期化)
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
+    private readonly float moveSpeed = 2.5f;
 
     // フレームワーク
     private void Update()
@@ -63,7 +53,7 @@ public class Player : MonoBehaviour
         isWalking = true;
 
         // 移動
-        Vector2 val = dir * moveSpeed;
+        Vector2 val = dir * (moveSpeed * Time.deltaTime);
         Vector3 pos = this.transform.localPosition + new Vector3(val.x, val.y, 0);
 
         // 移動範囲制限（FieldController で生成したフィールドの範囲）により、pos を制限
@@ -74,24 +64,8 @@ public class Player : MonoBehaviour
         this.transform.localPosition    = pos;
 
         // 移動する方向に応じて向きを変える
-        if(dir.x > 0) this.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        if(dir.x < 0) this.transform.localRotation = Quaternion.Euler(0, 180, 0);
-
-        direction = dir;
+        SetDirection(dir);
     }
-
-    /// <summary>
-    /// プレイヤー位置
-    /// </summary>
-    /// <value>座標</value>
-    public Vector3 Position { get => this.transform.localPosition; }
-
-    /// <summary>
-    /// プレイヤーの向き
-    /// </summary>
-    /// <value>向き</value>
-    public Vector2 Direction { get => direction; }
-
 
     /// <summary>
     /// コライダーが当たったら最初に呼ばれる
@@ -102,7 +76,7 @@ public class Player : MonoBehaviour
         // Enemy に当たったらダメージ
         if (collision.tag == "Enemy")
         {
-            Debug.Log("Player Hit : " + collision.name);
+            // Debug.Log("Player Hit : " + collision.name);
         }        
     }
     private void OnTriggerStay2D(Collider2D collision)
