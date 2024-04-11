@@ -35,10 +35,11 @@ public class Plow : MonoBehaviour
     /// <param name="p0">始点</param>
     /// <param name="p1">頂点</param>
     /// <param name="p2">終点</param>
-    public void Initialize(Vector3 p0, Vector3 p1, Vector3 p2)
+    /// <param name="course">左右向き</param>
+    public void Initialize(Vector3 p0, Vector3 p1, Vector3 p2, int course)
     {
-        // もし、p0 より p2 が左にあるなら、左向きにする
-        if (p0.x > p2.x) course = 1;
+        // 向き
+        this.course = course;
         // 放物線を描く（コルーチン）
         StartCoroutine(Throw(p0, p1, p2));
     }
