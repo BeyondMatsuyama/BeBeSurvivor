@@ -56,7 +56,7 @@ public class ExpController : MonoBehaviour
             if (!exp.GetComponent<Exp>().IsMoving)
             {
                 // プレイヤーとの距離を計算
-                float distance = Vector2.Distance(playerPos, exp.transform.position);
+                float distance = Vector2.Distance(playerPos, exp.transform.localPosition);
                 if (distance < MoveThreshold)
                 {
                     exp.GetComponent<Exp>().Move(playerController);

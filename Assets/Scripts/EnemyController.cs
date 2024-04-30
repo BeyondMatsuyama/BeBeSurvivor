@@ -158,7 +158,7 @@ public class EnemyController : MonoBehaviour
             // エネミーが死んでいる場合は無視
             if(enemy.GetComponent<Enemy>().CurStatus == Enemy.Status.Dead) continue;
             // プレイヤーとエネミーの距離を計算
-            float dist = Vector3.Distance(pos, enemy.transform.position);
+            float dist = Vector3.Distance(pos, enemy.transform.localPosition);
             if(dist < min)
             {
                 min = dist;

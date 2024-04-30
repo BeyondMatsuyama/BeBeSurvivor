@@ -61,7 +61,8 @@ public class Weapon_2 : WeaponBase
                 // 始点（プレイヤー位置）
                 Vector3 p0 = playerController.GetPosition();
                 // 頂点（相対座標）
-                float c = UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;                     // 向き（左右）
+                int course = UnityEngine.Random.Range(0, 2);                                // 向き（左右）
+                float c = course == 0 ? 1 : -1;                     // 向き（左右）
                 float w = UnityEngine.Random.Range(minWidth, maxWidth[GetLevel()]) * c;     // 幅
                 float h = height + UnityEngine.Random.Range(0, rndHeight);                  // 高さ
                 Vector3 p1 = new Vector3((w / 2f), h, 0);
@@ -72,7 +73,7 @@ public class Weapon_2 : WeaponBase
                 GameObject obj = Instantiate(prefab, parent);
 
                 // 初期化
-                obj.GetComponent<Plow>().Initialize(p0, p1, p2);
+                obj.GetComponent<Plow>().Initialize(p0, p1, p2, course);
 
                 // インターバル
                 yield return new WaitForSeconds(0.8f);

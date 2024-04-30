@@ -66,7 +66,7 @@ public class Weapon_3 : WeaponBase
         }
 
         // 生成済みの鎌の数が生成する鎌の数より多い場合は、削除
-        for(int i=num ; i<existNum ; i++)
+        for(int i=existNum-1 ; i>=num ; i--)
         {
             Destroy(sickles[i]);
             sickles.RemoveAt(i);
