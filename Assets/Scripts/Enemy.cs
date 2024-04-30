@@ -115,7 +115,7 @@ public class Enemy : BaseCharacter
     /// </summary>
     private void setWalkDirection()
     {
-        walkInfo.course = (walkInfo.player.Position - this.transform.position).normalized;
+        walkInfo.course = (walkInfo.player.Position - this.transform.localPosition).normalized;
         SetDirection(walkInfo.course);
     }
 
@@ -138,7 +138,7 @@ public class Enemy : BaseCharacter
             animator.SetInteger("status", (int)status);
 
             // 武器と反対方向へノックバック
-            Vector2 dir = (this.transform.position - collision.transform.position).normalized;
+            Vector2 dir = (this.transform.localPosition - collision.transform.localPosition).normalized;
             setNockBack(dir);
         }
     }
@@ -162,7 +162,7 @@ public class Enemy : BaseCharacter
         // 死亡アニメーションが終わったら消滅
         if (status == Status.Dead) 
         {
-            expController.Spawn(this.transform.position);
+            expController.Spawn(this.transform.localPosition);
             Destroy(this.gameObject);
         }
     }

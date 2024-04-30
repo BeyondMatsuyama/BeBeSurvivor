@@ -63,7 +63,7 @@ public class Sickle : MonoBehaviour
 
         // 位置を更新
         Vector2 pos = player.Position;
-        transform.position = new Vector3(
+        transform.localPosition = new Vector3(
             pos.x + Radius * Mathf.Cos(rad),
             pos.y + Radius * Mathf.Sin(rad),
             0.0f

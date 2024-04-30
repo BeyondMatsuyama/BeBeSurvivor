@@ -63,7 +63,7 @@ public class Plow : MonoBehaviour
             {
                 float Vx = 2 * (1f - t) * t * p1.x + Mathf.Pow (t, 2) * p2.x + p0.x;
                 float Vy = 2 * (1f - t) * t * p1.y + Mathf.Pow (t, 2) * p2.y + p0.y;
-                transform.position = new Vector3 (Vx, Vy, 0);
+                transform.localPosition = new Vector3 (Vx, Vy, 0);
 
                 t += 1 / distance / speed * Time.deltaTime;
 

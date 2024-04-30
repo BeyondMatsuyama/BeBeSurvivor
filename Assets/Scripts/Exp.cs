@@ -31,12 +31,12 @@ public class Exp : MonoBehaviour
     private IEnumerator move()
     {
         var elapsedTime = 0f;
-        var startPosition = transform.position;
+        var startPosition = transform.localPosition;
         while (elapsedTime < 1f)
         {
             var targetPosition = playerController.GetPosition();
             elapsedTime += Time.deltaTime * MoveSpeed;
-            transform.position = Vector2.Lerp(startPosition, targetPosition, elapsedTime);
+            transform.localPosition = Vector2.Lerp(startPosition, targetPosition, elapsedTime);
             yield return null;
         }
         Destroy(gameObject);
