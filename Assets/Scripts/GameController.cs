@@ -21,10 +21,8 @@ public class GameController : MonoBehaviour
     // フィールドワーク
     [SerializeField] FieldController fieldController;
 
-    // 画面サイズ
-    static  Vector2 screenSize = new Vector2(1284, 2788);
-    // 中心座標（左下原点）
-    private Vector2 centerAxis = new Vector2(screenSize.x / 2, screenSize.y / 2);
+    // 中心座標
+    private Vector2 centerAxis;
     // 長押し判定時間（sec）
     private const float HoldTime = 0.5f;
     // 長押し判定変数
@@ -36,6 +34,14 @@ public class GameController : MonoBehaviour
     // ポーズフラグ
     public static bool isPause = false;
     private int curLevelPoint = 0;
+
+    /// <summary>
+    /// 起動時処理
+    /// </summary>
+    void Awake()
+    {
+        centerAxis = new Vector2(Screen.width / 2, Screen.height / 2);
+    }
 
     /// <summary>
     /// フレームワーク
