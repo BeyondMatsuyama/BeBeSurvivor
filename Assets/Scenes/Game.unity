@@ -2546,7 +2546,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 386879982}
-  prefab: {fileID: 11022837396415520, guid: 022891dd1112d45a58b6f056786abeb6, type: 3}
+  prefab:
+  - {fileID: 11022837396415520, guid: 022891dd1112d45a58b6f056786abeb6, type: 3}
+  - {fileID: 4514414920102664908, guid: ab2a22ea485ad40e996b33703dbb21c6, type: 3}
   parent: {fileID: 1243791209}
 --- !u!4 &918975132
 Transform:
