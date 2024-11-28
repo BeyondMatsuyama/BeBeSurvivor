@@ -3874,6 +3874,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1393814160}
   m_CullTransparentMesh: 1
+--- !u!1 &1429481992 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2421423639509285843, guid: 555213a745cf641b8a7690de336062d5, type: 3}
+  m_PrefabInstance: {fileID: 2139378540}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1434958379
 GameObject:
   m_ObjectHideFlags: 0
@@ -5418,6 +5423,10 @@ PrefabInstance:
       propertyPath: hpGauge
       value: 
       objectReference: {fileID: 1242016607}
+    - target: {fileID: 1490769990668224708, guid: 555213a745cf641b8a7690de336062d5, type: 3}
+      propertyPath: weapon_1
+      value: 
+      objectReference: {fileID: 1429481992}
     - target: {fileID: 7505575688559502359, guid: 555213a745cf641b8a7690de336062d5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -24,8 +24,11 @@ public class Player : BaseCharacter
 
     // HP 制御
     [SerializeField] private HpGauge hpGauge;
-    private const int HpInit = 100;     // 初期 HP
-    private const int HPDamage = 10;    // ダメージ量
+    private const int HpInit   = 100;  // 初期 HP
+    private const int HPDamage =  2;   // ダメージ量
+
+    // 武器１オブジェクト（デフォルト武器）
+    [SerializeField] private GameObject weapon_1;
 
     // 初期化
     new void Start() {
@@ -94,8 +97,16 @@ public class Player : BaseCharacter
             Enemy enemy = collision.GetComponent<Enemy>();
             if(enemy.CurStatus != Enemy.Status.Dead)    // 死んでいない場合
             {
-                Debug.Log("Player Hit : " + collision.name);
-                hpGauge.Hit(HPDamage);
+                // Debug.Log("Player Hit : " + collision.name);
+                if(hpGauge.Hit(HPDamage))
+                {
+                    // 死亡処理
+                    Debug.Log("Player Dead");                    
+                    status = Status.Dead;
+                    animator.SetInteger("status", (int)status);
+                    // 武器１を非表示
+                    weapon_1.SetActive(false);
+                }
             }   
         }        
     }
@@ -108,4 +119,9 @@ public class Player : BaseCharacter
         //コライダーがが離れた時に呼ばれる
     }
  
+    public bool IsDead()
+    {
+        return status == Status.Dead;
+    }
+
 }
