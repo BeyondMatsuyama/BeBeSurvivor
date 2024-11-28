@@ -25,7 +25,7 @@ public class Player : BaseCharacter
     // HP 制御
     [SerializeField] private HpGauge hpGauge;
     private const int HpInit   = 100;  // 初期 HP
-    private const int HPDamage =  50;   // ダメージ量
+    private const int HPDamage =   2;   // ダメージ量
 
     // 武器１オブジェクト（デフォルト武器）
     [SerializeField] private GameObject weapon_1;
