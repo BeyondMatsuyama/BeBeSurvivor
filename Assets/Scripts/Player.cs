@@ -22,6 +22,21 @@ public class Player : BaseCharacter
     // 移動速度の係数
     private readonly float moveSpeed = 2.5f;
 
+    // HP 制御
+    [SerializeField] private HpGauge hpGauge;
+    private const int HpInit   = 100;  // 初期 HP
+    private const int HPDamage =   2;   // ダメージ量
+
+    // 武器１オブジェクト（デフォルト武器）
+    [SerializeField] private GameObject weapon_1;
+
+    // 初期化
+    new void Start() {
+        base.Start();
+        // HP ゲージ初期化
+        hpGauge.Init(HpInit);
+    }
+
     // フレームワーク
     private void Update()
     {
@@ -63,6 +78,9 @@ public class Player : BaseCharacter
         if(pos.y < -fieldLimit.y) pos.y = -fieldLimit.y;
         this.transform.localPosition    = pos;
 
+        // HpGauge の位置をプレイヤーに追従
+        hpGauge.SetPosition(pos);
+
         // 移動する方向に応じて向きを変える
         SetDirection(dir);
     }
@@ -76,7 +94,20 @@ public class Player : BaseCharacter
         // Enemy に当たったらダメージ
         if (collision.tag == "Enemy")
         {
-            // Debug.Log("Player Hit : " + collision.name);
+            Enemy enemy = collision.GetComponent<Enemy>();
+            if(enemy.CurStatus != Enemy.Status.Dead)    // 死んでいない場合
+            {
+                // Debug.Log("Player Hit : " + collision.name);
+                if(hpGauge.Hit(HPDamage))
+                {
+                    // 死亡処理
+                    Debug.Log("Player Dead");                    
+                    status = Status.Dead;
+                    animator.SetInteger("status", (int)status);
+                    // 武器１を非表示
+                    weapon_1.SetActive(false);
+                }
+            }   
         }        
     }
     private void OnTriggerStay2D(Collider2D collision)
@@ -88,4 +119,9 @@ public class Player : BaseCharacter
         //コライダーがが離れた時に呼ばれる
     }
  
+    public bool IsDead()
+    {
+        return status == Status.Dead;
+    }
+
 }

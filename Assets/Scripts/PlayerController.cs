@@ -52,4 +52,9 @@ public class PlayerController : MonoBehaviour
         player.SetDirection(dir);
     }
 
+    public bool IsDead()
+    {
+        return player.IsDead();
+    }
+    
 }

@@ -13,7 +13,7 @@ public class BaseCharacter : MonoBehaviour
     protected Vector2 direction = new Vector2(1, 0);
 
     // 起動時処理(初期化)
-    void Start()
+    protected void Start()
     {
         animator = GetComponent<Animator>();
     }

@@ -69,6 +69,16 @@ public class GameController : MonoBehaviour
                 // レベルアップボードを表示
                 weaponBoard.ShowBoard();
             }
+
+            // 死亡処理
+            if(playerController.IsDead())
+            {
+                // ポーズ
+                isPause = true;
+
+                // リザルト表示
+                Debug.Log("Game Over!!!!");
+            }
         }
     }
 
