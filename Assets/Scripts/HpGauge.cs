@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class HpGauge : MonoBehaviour
 {
-    [SerializeField] private Transform hpGauge;    // HP ゲージ
+    [SerializeField] private Transform gauge;     // HP ゲージ
 
     private const float BaseScale = 3.0f;         // 基本スケール値（長さ）
 
@@ -48,6 +48,10 @@ public class HpGauge : MonoBehaviour
         return isDead;
     }
 
+    /// <summary>
+    /// 表示座標設定
+    /// </summary>
+    /// <param name="pos">座標</param>
     public void SetPosition(Vector3 pos)
     {
         this.transform.localPosition = pos + basePosition;
@@ -71,7 +75,13 @@ public class HpGauge : MonoBehaviour
             // スケール変更
             float scl = BaseScale * cur / max;
             // Debug.Log("scl: " + scl + " cur: " + cur + " max: " + max);
-            hpGauge.localScale = new Vector3(scl, 0.4f, 1f);
+            gauge.localScale = new Vector3(scl, 0.4f, 1f);
+
+            // HP が 0 になったら非表示
+            if(cur <= 0)
+            {
+                this.gameObject.SetActive(false);
+            }
         }
     }
 
