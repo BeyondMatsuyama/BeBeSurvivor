@@ -20,6 +20,8 @@ public class GameController : MonoBehaviour
     [SerializeField] ExpController expController;
     // フィールドワーク
     [SerializeField] FieldController fieldController;
+    // ヘッダ情報
+    [SerializeField] HeaderController headerController;
 
     // 中心座標
     private Vector2 centerAxis;
@@ -58,6 +60,9 @@ public class GameController : MonoBehaviour
                 pos.z = -1.0f;
                 mainCamera.gameObject.transform.localPosition = pos;
             }
+
+            // ヘッダの経験値ゲージ更新
+            headerController.SetExpGauge(expController.GetExpNum, levelThreshold[weaponController.GetLevelPoint()]);
 
             // 武器レベルアップ処理
             if(expController.GetExpNum >= levelThreshold[weaponController.GetLevelPoint()])
