@@ -20,6 +20,7 @@ public class ExpController : MonoBehaviour
     };
 
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private HeaderController headerController;
 
     [SerializeField] private GameObject[] prefab;
     [SerializeField] private GameObject parent;
@@ -39,6 +40,8 @@ public class ExpController : MonoBehaviour
     /// <param name="pos">配置座標</param>
     public void Spawn(Vector2 pos)
     {
+        headerController.AddDefeatCount();  // 討伐数をカウント
+
         // マグネットが既に存在するか確認する
         bool isExistMag = false;
         foreach (var exp in exps)
