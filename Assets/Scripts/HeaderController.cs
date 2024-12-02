@@ -13,9 +13,11 @@ public class HeaderController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI txtMinute;
     [SerializeField] private TextMeshProUGUI txtSecond;
     private float timer = 0.0f;
+    public float TimeValue { get { return timer; } }
 
     [SerializeField] private TextMeshProUGUI txtDefeatCount;
     private int defeatCount = 0;
+    public int DefeatCount { get { return defeatCount; } }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
