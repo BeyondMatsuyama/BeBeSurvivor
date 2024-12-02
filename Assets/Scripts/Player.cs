@@ -101,7 +101,6 @@ public class Player : BaseCharacter
                 if(hpGauge.Hit(HPDamage))
                 {
                     // 死亡処理
-                    Debug.Log("Player Dead");                    
                     status = Status.Dead;
                     animator.SetInteger("status", (int)status);
                     // 武器１を非表示

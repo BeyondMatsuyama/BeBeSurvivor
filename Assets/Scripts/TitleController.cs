@@ -8,6 +8,7 @@ public class TitleController : MonoBehaviour
         // 画面タッチでゲームシーンに遷移
         if (Input.GetMouseButtonDown(0))
         {
+            GameController.isPause = false;
             changeScene();
         }   
     }

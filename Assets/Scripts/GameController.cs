@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour
     [SerializeField] FieldController fieldController;
     // ヘッダ情報
     [SerializeField] HeaderController headerController;
+    // リザルト情報
+    [SerializeField] ResultController resultController;
 
     // 中心座標
     private Vector2 centerAxis;
@@ -32,6 +34,9 @@ public class GameController : MonoBehaviour
 
     // 武器のレベルポイントが閾値を超えたら、武器レベルアップ（初期レベルは１で、９レベルまで）
     private readonly int[] levelThreshold = { 0, 5, 10, 20, 30, 40, 60, 80, 100, 65535 };
+
+    // 討伐数の閾値
+    private const int DefeatThreshold = 2000;
 
     // ポーズフラグ
     public static bool isPause = false;
@@ -80,9 +85,28 @@ public class GameController : MonoBehaviour
             {
                 // ポーズ
                 isPause = true;
-
-                // リザルト表示
-                Debug.Log("Game Over!!!!");
+                // リザルト表示（ゲームオーバー）
+                resultController.Show(false, headerController.TimeValue, headerController.DefeatCount);
+            }
+            // クリア判定
+            else
+            {
+                // 討伐数が一定数を超えたらクリア
+                if(headerController.DefeatCount >= DefeatThreshold)
+                {
+                    // ポーズ
+                    isPause = true;
+                    // リザルト表示（クリア）
+                    resultController.Show(true, headerController.TimeValue, headerController.DefeatCount);
+                }
+            }
+        }
+        else
+        {
+            if(resultController.ToTitle)
+            {
+                // タイトルシーンへ戻る
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
             }
         }
     }
