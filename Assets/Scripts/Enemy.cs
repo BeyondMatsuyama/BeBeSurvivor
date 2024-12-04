@@ -145,20 +145,22 @@ public class Enemy : BaseCharacter
     /// <param name="collision">相手側の情報が格納される</param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 死んでいる場合は無視
-        if (status == Status.Init || status == Status.Dead) return;
-
-        // Weapon に当たったらダメージ
-        if (collision.tag == "Weapon")
+        // status が Alive の場合のみ
+        if (status == Status.Alive) 
         {
-            // Debug.Log("Enemy Hit : " + collision.name);
+            // Weapon に当たったらダメージ
+            if (collision.tag == "Weapon")
+            {
+                // アニメーションの status を変更
+                setStatus(Status.Hit);
 
-            // アニメーションの status を変更
-            setStatus(Status.Hit);
+                // 武器と反対方向へノックバック
+                Vector2 dir = (this.transform.localPosition - collision.transform.localPosition).normalized;
+                setNockBack(dir);
 
-            // 武器と反対方向へノックバック
-            Vector2 dir = (this.transform.localPosition - collision.transform.localPosition).normalized;
-            setNockBack(dir);
+                //武器の名称
+                Debug.Log("Weapon Hit : " + collision.name);
+            }
         }
     }
 
