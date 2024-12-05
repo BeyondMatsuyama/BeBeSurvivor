@@ -1,23 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// 鎌（農具）
 /// </summary>
 public class Sickle : MonoBehaviour
 {
-/*
-    void Start()
-    {
-        // 初期化
-        Initialize(0.0f);
-    }
-*/
-
     // 半径
-    public const float Radius = 4.0f;
+    public const float Radius = 3.5f;
     // 回転速度（秒間）
     private const float RotateSpeed = 180f;
     // 自転速度（秒間）
@@ -91,13 +82,8 @@ public class Sickle : MonoBehaviour
 
                 // カウント
                 enemy.IsCounted = true;
-                // 親オブジェクトへ通知
-                OnHit.Invoke();
             }
         }
     }
-
-    // ヒット時に呼ばれるイベント
-    public UnityEvent OnHit = new UnityEvent();
 
 }
