@@ -16,12 +16,9 @@ public class Enemy : BaseCharacter
         Hit,
         Dead
     }
+
     private Status status = Status.Init;
     public Status CurStatus { get => status; }
-
-    // 討伐カウントフラグ
-    private bool isCounted = false;
-    public bool IsCounted { get => isCounted; set => isCounted = value;}
 
     // 歩きパラメータ
     private const float MinInterval = 1.0f;
@@ -50,6 +47,8 @@ public class Enemy : BaseCharacter
 
     public int hp = 10;
 
+    private float deadTime = 0.0f;
+
     private ExpController expController;
 
     /// <summary>
@@ -71,13 +70,14 @@ public class Enemy : BaseCharacter
                     nockBack.timer -= Time.deltaTime;
                     if(nockBack.timer < 0) nockBack.isNockBack = false;
                     this.transform.localPosition += new Vector3(nockBack.dir.x * nockBack.speed * Time.deltaTime, nockBack.dir.y * nockBack.speed * Time.deltaTime, 0);
+                    break;  // ノックバック中はアニメーション判定しない
                 }
 
                 // アニメーションの終了を待つ
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
                 if (stateInfo.IsName("hit") && stateInfo.normalizedTime >= 1.0f)
                 {
-                    hp -= 10;
+                    hp -= 10;   // ダメージ値（仮）
                     if(hp > 0)
                     {
                         setStatus(Status.Alive);
@@ -89,6 +89,15 @@ public class Enemy : BaseCharacter
                 }
                 break;
             case Status.Dead:
+                // status:dead, hp:0 でオブジェクトが消えないケースが存在する
+                // そのため、一定時間経過後に強制的に消す
+                // added 2024.12.5
+                deadTime += Time.deltaTime;
+                if(deadTime > 1.0f)
+                {
+                    // Debug.Log("Enemy Dead Time Over: " + this.name);
+                    OnAnimationEnd();
+                }
                 break;
         }
     }
@@ -159,7 +168,7 @@ public class Enemy : BaseCharacter
                 setNockBack(dir);
 
                 //武器の名称
-                Debug.Log("Weapon Hit : " + collision.name);
+                // Debug.Log("Weapon Hit : " + collision.name);
             }
         }
     }

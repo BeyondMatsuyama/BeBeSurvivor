@@ -64,26 +64,4 @@ public class Sickle : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, 0.0f, spinAngle);
     }
 
-    /// <summary>
-    /// コライダーが当たったら最初に呼ばれる
-    /// </summary>
-    /// <param name="collision">相手側の情報が格納される</param>
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // Enemy に当たったら消滅
-        if (collision.tag == "Enemy")
-        {
-            Enemy enemy = collision.GetComponent<Enemy>();
-            // 対象のエネミーが未カウントの場合
-            if (!enemy.IsCounted)
-            {
-                // デバッグログ（自オブジェクトとヒットしたオブジェクトの名称）
-                // Debug.Log(this.name + " Hit " + collision.name);
-
-                // カウント
-                enemy.IsCounted = true;
-            }
-        }
-    }
-
 }
