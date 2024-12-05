@@ -121,7 +121,8 @@ public class EnemyController : MonoBehaviour
         Vector2 pos = new Vector2(playerPos.x + r * Mathf.Cos(angle), playerPos.y + r * Mathf.Sin(angle));
 
         // ランダムなエネミーを生成
-        GameObject enemy = Instantiate(enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)], pos, Quaternion.identity);
+        int enemyNo = UnityEngine.Random.Range(0, enemyPrefabs.Length);
+        GameObject enemy = Instantiate(enemyPrefabs[enemyNo], pos, Quaternion.identity);
         enemy.transform.parent = parent.transform;
         enemy.name = "Enemy_" + no;
         enemies.Add(enemy.gameObject);

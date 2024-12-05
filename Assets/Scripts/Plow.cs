@@ -90,14 +90,11 @@ public class Plow : MonoBehaviour
         if (collision.tag == "Enemy")
         {
             Enemy enemy = collision.GetComponent<Enemy>();
-            // 対象のエネミーが未カウントの場合
-            if (!enemy.IsCounted)            
+            // 対象のエネミーが生存
+            if (enemy.CurStatus == Enemy.Status.Alive)
             {
                 // デバッグログ（自オブジェクトとヒットしたオブジェクトの名称）
                 // Debug.Log(this.name + " Hit " + collision.name);
-
-                // カウント
-                enemy.IsCounted = true;
 
                 // ヒット数を減らし、ヒット数が０になったら生存フラグを降ろす
                 hitCount--;
