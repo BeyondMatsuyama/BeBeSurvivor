@@ -96,8 +96,7 @@ public class ExpController : MonoBehaviour
                 expNum += 10;
                 break;
             case Type.Health:
-                Debug.Log("Get Health");
-                // playerController.AddHp(1);
+                playerController.Heal();
                 break;
             case Type.Mag:
                 // 移動中でない exp オブジェクトをプレイヤーに向けて移動させる（マグネットは引き寄せられない）

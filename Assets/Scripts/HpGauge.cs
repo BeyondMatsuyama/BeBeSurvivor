@@ -33,9 +33,9 @@ public class HpGauge : MonoBehaviour
     /// ダメージ処理
     /// </summary>
     /// <param name="damage"></param> <summary>ダメージ量</summary>
-    public bool Hit(int damage)
+    public bool Damage(int damage)
     {
-        if(animTime > 0) return false;
+        if(animTime > 0) return false;  // 無敵時間
 
         bool isDead = false;
         tgt -= damage;
@@ -46,6 +46,17 @@ public class HpGauge : MonoBehaviour
         }
         animTime = AnimTime;
         return isDead;
+    }
+
+    /// <summary>
+    /// HP 回復
+    /// </summary>
+    /// <param name="value">回復量</param>
+    public void Heal(int value)
+    {
+        tgt += value;
+        if(tgt > max) tgt = max;
+        animTime = AnimTime;
     }
 
     /// <summary>

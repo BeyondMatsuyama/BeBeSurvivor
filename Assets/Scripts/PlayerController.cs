@@ -52,9 +52,21 @@ public class PlayerController : MonoBehaviour
         player.SetDirection(dir);
     }
 
+    /// <summary>
+    /// 死亡確認
+    /// </summary>
+    /// <returns>true で死亡</returns>
     public bool IsDead()
     {
         return player.IsDead();
     }
-    
+
+    /// <summary>
+    /// HP 回復
+    /// </summary>    
+    public void Heal()
+    {
+        player.Heal();
+    }
+
 }
