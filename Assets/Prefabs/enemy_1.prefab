@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   param:
-    type: 0
+    type: 1
     hp: 20
     speed: 0.5
   OnDead:
