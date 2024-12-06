@@ -45,7 +45,9 @@ public class HeaderController : MonoBehaviour
     {
         expGauge.cur = cur;
         expGauge.max = max;
-        objExpGauge.localScale = new Vector3((float)expGauge.cur / expGauge.max, 1.0f, 1.0f);
+        // スケール値を算出（1.0 を超える場合は 1.0 にする）
+        float scl = (float)expGauge.cur / expGauge.max;
+        objExpGauge.localScale = new Vector3(scl > 1.0f ? 1.0f : scl, 1.0f, 1.0f);
     }
 
     /// <summary>

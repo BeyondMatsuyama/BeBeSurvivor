@@ -748,7 +748,7 @@ Transform:
   m_GameObject: {fileID: 365266724}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3427,7 +3427,10 @@ MonoBehaviour:
   playerController: {fileID: 386879982}
   headerController: {fileID: 1429233481}
   prefab:
-  - {fileID: 11022837396415520, guid: 022891dd1112d45a58b6f056786abeb6, type: 3}
+  - {fileID: 815894738947505585, guid: fbacb30ff5c0c48a589139eb46c029d4, type: 3}
+  - {fileID: 3720869205308823430, guid: c6c4043fcffa9463ba57921278648389, type: 3}
+  - {fileID: 3589011983972985449, guid: eae9ac97ffa2e427cbdf830a65c1ede3, type: 3}
+  - {fileID: 744675329149044291, guid: 2251bf23f8b1849b5b626f75b7c6b119, type: 3}
   - {fileID: 4514414920102664908, guid: ab2a22ea485ad40e996b33703dbb21c6, type: 3}
   parent: {fileID: 1243791209}
 --- !u!4 &918975132

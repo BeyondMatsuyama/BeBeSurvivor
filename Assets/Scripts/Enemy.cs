@@ -180,9 +180,6 @@ public class Enemy : BaseCharacter
                 // 武器と反対方向へノックバック
                 Vector2 dir = (this.transform.localPosition - collision.transform.localPosition).normalized;
                 setNockBack(dir);
-
-                //武器の名称
-                // Debug.Log("Weapon Hit : " + collision.name);
             }
         }
     }
@@ -206,7 +203,7 @@ public class Enemy : BaseCharacter
         // 死亡アニメーションが終わったら消滅
         if (status == Status.Dead) 
         {
-            expController.Spawn(this.transform.localPosition);
+            expController.Spawn(param.type, this.transform.localPosition);
             Destroy(this.gameObject);
         }
     }

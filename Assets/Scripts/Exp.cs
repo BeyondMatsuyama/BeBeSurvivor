@@ -8,6 +8,8 @@ using UnityEngine.Events;
 /// </summary>
 public class Exp : MonoBehaviour
 {
+    public ExpController.Type type;
+
     private PlayerController playerController;
     private const float MoveSpeed = 4f;
     private bool isMoving = false;

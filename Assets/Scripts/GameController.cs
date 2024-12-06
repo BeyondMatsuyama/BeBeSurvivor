@@ -33,7 +33,7 @@ public class GameController : MonoBehaviour
     private float holdTime = HoldTime;
 
     // 武器のレベルポイントが閾値を超えたら、武器レベルアップ（初期レベルは１で、９レベルまで）
-    private readonly int[] levelThreshold = { 0, 5, 10, 20, 30, 40, 60, 80, 100, 65535 };
+    private readonly int[] levelThreshold = { 0, 10, 25, 50, 100, 200, 300, 400, 500, 65535 };
 
     // 討伐数の閾値
     private const int DefeatThreshold = 2000;
