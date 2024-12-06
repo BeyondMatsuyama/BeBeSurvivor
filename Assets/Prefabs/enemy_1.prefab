@@ -160,7 +160,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b41bc1532fe54b759e5b039d1d2dbaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 20
+  param:
+    type: 0
+    hp: 20
+    speed: 0.5
   OnDead:
     m_PersistentCalls:
       m_Calls: []
