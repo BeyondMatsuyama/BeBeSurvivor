@@ -24,7 +24,8 @@ public class ExpController : MonoBehaviour
 
     private List<GameObject> exps = new List<GameObject>();
 
-    private const float MoveThreshold = 2f;
+    private const float MoveThresholdSingle =  1f;
+    private const float MoveThresholdMulti  = 10f;
 
     // 経験値の取得数
     private int expNum = 0;
@@ -58,7 +59,7 @@ public class ExpController : MonoBehaviour
         // 経験値S, M の場合に、回復アイテム、マグネットになる可能性がある
         if(expType == Type.Exp_S || expType == Type.Exp_M)
         {
-            // 回復アイテム or マグネット
+            // 回復アイテム or マグネットを低確率で生成
             if(Random.Range(0, 100) < 1)
             {
                 // 回復アイテム 80%、マグネット 20%
@@ -100,13 +101,14 @@ public class ExpController : MonoBehaviour
                 break;
             case Type.Mag:
                 // 移動中でない exp オブジェクトをプレイヤーに向けて移動させる（マグネットは引き寄せられない）
+                Vector2 playerPos = playerController.GetPosition();
                 foreach (var obj in exps)
                 {
                     Exp e = obj.GetComponent<Exp>();
-
-                    if(e.type != Type.Mag && !e.IsMoving)
+                    float distance = Vector2.Distance(playerPos, obj.transform.localPosition);
+                    if(e.type != Type.Mag && !e.IsMoving && distance < MoveThresholdMulti)
                     {
-                        pull(obj);
+                        pull(obj, false);
                     }
     }
                 break;
@@ -132,9 +134,9 @@ public class ExpController : MonoBehaviour
             {
                 // プレイヤーとの距離を計算
                 float distance = Vector2.Distance(playerPos, obj.transform.localPosition);
-                if (distance < MoveThreshold)
+                if (distance < MoveThresholdSingle)
                 {
-                    pull(obj);
+                    pull(obj, true);
                 }
             }
         }
@@ -144,10 +146,10 @@ public class ExpController : MonoBehaviour
     /// 引き寄せ処理
     /// </summary>
     /// <param name="obj">対象のオブジェクト</param>
-    private void pull(GameObject obj)
+    private void pull(GameObject obj, bool isSingle)
     {
         Exp exp = obj.GetComponent<Exp>();
-        exp.Move(playerController);
+        exp.Move(playerController, isSingle);
         // 移動終了したらリストから削除
         exp.OnDeleted.AddListener(() => Remove(obj));
     }
