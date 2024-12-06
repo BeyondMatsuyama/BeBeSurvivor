@@ -8,38 +8,45 @@ using UnityEngine.Events;
 /// </summary>
 public class Exp : MonoBehaviour
 {
+    public ExpController.Type type;
+
     private PlayerController playerController;
-    private const float MoveSpeed = 4f;
+    private const float MoveSpeedSingle =  4f;
+    private const float MoveSpeedMulti  = 12f;
     private bool isMoving = false;
     public bool IsMoving { get => isMoving; }
+    private float moveSpeed = 0f;
 
     /// <summary>
     /// プレイヤーに向けて移動するトリガー
     /// </summary>
     /// <param name="playerController"></param>
-    public void Move(PlayerController playerController)
+    public void Move(PlayerController playerController, bool isSingle)
     {
         this.playerController = playerController;
         isMoving = true;
-        StartCoroutine(move());
+
+        moveSpeed = isSingle ? MoveSpeedSingle : MoveSpeedMulti;
     }
 
     /// <summary>
-    /// プレイヤーに向けて移動する処理
+    /// フレームワーク
     /// </summary>
-    /// <returns>コルーチン</returns>
-    private IEnumerator move()
+    private void Update()
     {
-        var elapsedTime = 0f;
-        var startPosition = transform.localPosition;
-        while (elapsedTime < 1f)
+        // ポーズ中はスキップ
+        if (GameController.isPause) return;
+
+        if (isMoving)
         {
             var targetPosition = playerController.GetPosition();
-            elapsedTime += Time.deltaTime * MoveSpeed;
-            transform.localPosition = Vector2.Lerp(startPosition, targetPosition, elapsedTime);
-            yield return null;
+            transform.localPosition = Vector2.MoveTowards(transform.localPosition, targetPosition, Time.deltaTime * moveSpeed);
+
+            if (Vector2.Distance(transform.localPosition, targetPosition) < 0.1f)
+            {
+                Destroy(gameObject);
+            }
         }
-        Destroy(gameObject);
     }
 
     /// <summary>

@@ -16,14 +16,30 @@ public class Enemy : BaseCharacter
         Hit,
         Dead
     }
-
     private Status status = Status.Init;
     public Status CurStatus { get => status; }
+
+    // タイプ
+    public enum Type
+    {
+        Normal_1 = 0,
+        Normal_2,
+        Boss
+    }
+
+    // パラメータ
+    [System.Serializable]
+    private struct TypeParam
+    {
+        public Type  type;
+        public int   hp;
+        public float speed;
+    }
+    [SerializeField] private TypeParam param;
 
     // 歩きパラメータ
     private const float MinInterval = 1.0f;
     private const float MaxInterval = 5.0f;
-    private const float WalkSpeed = 0.5f;
 
     // 歩き情報
     private struct Walk
@@ -44,8 +60,6 @@ public class Enemy : BaseCharacter
         public float timer;
     }
     private NockBack nockBack;
-
-    public int hp = 10;
 
     private float deadTime = 0.0f;
 
@@ -77,8 +91,8 @@ public class Enemy : BaseCharacter
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
                 if (stateInfo.IsName("hit") && stateInfo.normalizedTime >= 1.0f)
                 {
-                    hp -= 10;   // ダメージ値（仮）
-                    if(hp > 0)
+                    param.hp -= 10;   // ダメージ値（仮）
+                    if(param.hp > 0)
                     {
                         setStatus(Status.Alive);
                     }
@@ -128,7 +142,7 @@ public class Enemy : BaseCharacter
         if (GameController.isPause) return;
 
         // 歩く
-        this.transform.localPosition += new Vector3(walkInfo.course.x * WalkSpeed * Time.deltaTime, walkInfo.course.y * WalkSpeed * Time.deltaTime, 0);
+        this.transform.localPosition += new Vector3(walkInfo.course.x * param.speed * Time.deltaTime, walkInfo.course.y * param.speed * Time.deltaTime, 0);
         // タイマー更新
         walkInfo.timer -= Time.deltaTime;
         // タイマーが０以下になったら再設定
@@ -166,9 +180,6 @@ public class Enemy : BaseCharacter
                 // 武器と反対方向へノックバック
                 Vector2 dir = (this.transform.localPosition - collision.transform.localPosition).normalized;
                 setNockBack(dir);
-
-                //武器の名称
-                // Debug.Log("Weapon Hit : " + collision.name);
             }
         }
     }
@@ -192,7 +203,7 @@ public class Enemy : BaseCharacter
         // 死亡アニメーションが終わったら消滅
         if (status == Status.Dead) 
         {
-            expController.Spawn(this.transform.localPosition);
+            expController.Spawn(param.type, this.transform.localPosition);
             Destroy(this.gameObject);
         }
     }

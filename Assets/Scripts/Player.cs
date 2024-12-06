@@ -24,8 +24,9 @@ public class Player : BaseCharacter
 
     // HP 制御
     [SerializeField] private HpGauge hpGauge;
-    private const int HpInit   = 100;  // 初期 HP
+    private const int HpInit   = 100;   // 初期 HP
     private const int HPDamage =   2;   // ダメージ量
+    private const int HPHeal   =  10;   // 回復量
 
     // 武器１オブジェクト（デフォルト武器）
     [SerializeField] private GameObject weapon_1;
@@ -98,7 +99,7 @@ public class Player : BaseCharacter
             if(enemy.CurStatus != Enemy.Status.Dead)    // 死んでいない場合
             {
                 // Debug.Log("Player Hit : " + collision.name);
-                if(hpGauge.Hit(HPDamage))
+                if(hpGauge.Damage(HPDamage))
                 {
                     // 死亡処理
                     status = Status.Dead;
@@ -121,6 +122,14 @@ public class Player : BaseCharacter
     public bool IsDead()
     {
         return status == Status.Dead;
+    }
+
+    /// <summary>
+    /// HP 回復
+    /// </summary>
+    public void Heal()
+    {
+        hpGauge.Heal(HPHeal);
     }
 
 }
