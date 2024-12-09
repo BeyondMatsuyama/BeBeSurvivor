@@ -24,9 +24,9 @@ public class GameController : MonoBehaviour
     [SerializeField] HeaderController headerController;
     // リザルト情報
     [SerializeField] ResultController resultController;
-
-    // 中心座標
-    private Vector2 centerAxis;
+    // カーソル制御
+    [SerializeField] CursorController cursorController;
+    
     // 長押し判定時間（sec）
     private const float HoldTime = 0.5f;
     // 長押し判定変数
@@ -41,14 +41,6 @@ public class GameController : MonoBehaviour
     // ポーズフラグ
     public static bool isPause = false;
     private int curLevelPoint = 0;
-
-    /// <summary>
-    /// 起動時処理
-    /// </summary>
-    void Awake()
-    {
-        centerAxis = new Vector2(Screen.width / 2, Screen.height / 2);
-    }
 
     /// <summary>
     /// フレームワーク
@@ -129,9 +121,18 @@ public class GameController : MonoBehaviour
     {
         bool moved = false;
         var mouse = Mouse.current;
-        if(mouse.press.ReadValue() == 1)    // press 状態
+
+        // 押された瞬間
+        if(mouse.press.wasPressedThisFrame)
         {
-            if(holdTime > 0.0f)                 // 待機
+            Vector2 pos = mouse.position.ReadValue();
+            cursorController.SetCenter(pos);
+            // Debug.Log("press : "+pos);
+        }
+        // 押したまま
+        else if(mouse.press.isPressed)
+        {
+            if(holdTime > 0.0f)                 // 一定時間待機
             {
                 holdTime -= Time.deltaTime;
                 if(holdTime < 0.0f) holdTime = 0.0f;
@@ -140,17 +141,23 @@ public class GameController : MonoBehaviour
             {
                 // タッチ座標から移動方向のベクトルを求める
                 Vector2 pos = mouse.position.ReadValue();
-                Vector2 vec = (pos - centerAxis).normalized;
+                Vector2 vec = (pos - cursorController.Center).normalized;
+                // Debug.Log("repeated");                
                 // Debug.Log("vec:"+vec);
 
+                // カーソル更新
+                cursorController.UpdatePosition(pos);
                 // プレイヤーへ渡す
                 playerController.Move(vec);
-                moved = true;
+                moved = true;                
             }
         }
-        else                                // release 状態
+        // 離した瞬間
+        else if(mouse.press.wasReleasedThisFrame)
         {
             holdTime = HoldTime;
+            cursorController.Hide();
+            // Debug.Log("release");
         }
 
         return moved;
