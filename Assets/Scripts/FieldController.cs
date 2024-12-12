@@ -9,6 +9,16 @@ public class FieldController : MonoBehaviour
 {
     public static readonly Vector2 fieldLimit = new Vector2(46.0f, 40.0f);
 
+    private enum FieldID
+    {
+        Grass = 0,
+        Grass2,
+        Grass3,
+        Grass4,
+        Grass5,
+        OutOfArea
+    }
+
     [SerializeField] private GameObject[] field;
     [SerializeField] private GameObject parent;
 
@@ -23,23 +33,24 @@ public class FieldController : MonoBehaviour
     /// </summary>
     private void initialize()
     {
-        // フィールドを生成（-50, -50, 0.5）から（50, 50, 0.5）までの範囲（5 x 5 のマス目）
-        Vector2 pos = new Vector2(-50, 50);
-        float size = 5f;
-        int cnt = 20;
-        for(int x = 0; x <= cnt; x++)
+        Vector2 startPos = new Vector2(-20.5f, 100.5f);
+        Vector2 squareNum = new Vector2(40, 200);
+        int OutOfAreaWidth = 5;
+        int[] threasholdX = new int[] {OutOfAreaWidth, (int)squareNum.x - 1 - OutOfAreaWidth};
+        int[] threasholdY = new int[] {OutOfAreaWidth, (int)squareNum.y - 1 - OutOfAreaWidth};
+
+
+        for(int x = 0; x < squareNum.x; x++)
         {
-            for(int y = 0; y <= cnt; y++)
+            for(int y = 0; y < squareNum.y; y++)
             {
-                // x, y が 0 と cnt の時は filed[1] を、それ以外は filed[0] を生成
-                int idx = (x == 0 || x == cnt || y == 0 || y == cnt) ? 1 : 0;
-                // 中央の 1マスはfield[2]を生成
-                if(x == cnt / 2 && y == cnt / 2)
-                {
-                    idx = 2;
-                }
+                // エリア外は外周の４マス
+                int idx = (int)FieldID.OutOfArea;
+                // その内側は草地をランダムに配置
+                if(x > threasholdX[0] && x < threasholdX[1] && y > threasholdY[0] && y < threasholdY[1]) idx = Random.Range(0, 5);
                 // 生成
-                GameObject obj = Instantiate(field[idx], new Vector3(pos.x + (x * size), pos.y - (y * size), 0.5f), Quaternion.identity);
+                GameObject obj = Instantiate(field[idx], new Vector3(startPos.x + x, startPos.y - y, 0.5f), Quaternion.identity);
+                obj.name = "field_" + idx + " : "+ x + ", " + y;
                 obj.transform.parent = parent.transform;
             }
         }
