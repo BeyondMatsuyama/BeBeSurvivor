@@ -7401,6 +7401,10 @@ PrefabInstance:
       propertyPath: hpGauge
       value: 
       objectReference: {fileID: 8607910386993371887}
+    - target: {fileID: 1490769990668224708, guid: 555213a745cf641b8a7690de336062d5, type: 3}
+      propertyPath: fieldController
+      value: 
+      objectReference: {fileID: 961630575}
     - target: {fileID: 7505575688559502359, guid: 555213a745cf641b8a7690de336062d5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

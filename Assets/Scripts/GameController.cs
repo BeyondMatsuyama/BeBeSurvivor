@@ -52,10 +52,12 @@ public class GameController : MonoBehaviour
             // プレイヤー移動処理
             if(onMove())
             {
-                // カメラを追従させる
+                // プレイヤー位置
                 Vector3 pos = playerController.GetPosition();
-                pos.z = -1.0f;
-                mainCamera.gameObject.transform.localPosition = pos;
+                // カメラの移動制限
+                Vector2 camPos = fieldController.GetCameraPosition(new Vector2(pos.x, pos.y));
+                // カメラ位置更新
+                mainCamera.gameObject.transform.localPosition = new Vector3(camPos.x, camPos.y, -1.0f);
             }
 
             // ヘッダの経験値ゲージ更新
@@ -70,6 +72,8 @@ public class GameController : MonoBehaviour
                 curLevelPoint = weaponController.GetLevelPoint();
                 // レベルアップボードを表示
                 weaponBoard.ShowBoard();
+                // カーソル非表示
+                cursorController.Hide();
             }
 
             // 死亡処理
@@ -90,6 +94,8 @@ public class GameController : MonoBehaviour
                     isPause = true;
                     // リザルト表示（クリア）
                     resultController.Show(true, headerController.TimeValue, headerController.DefeatCount);
+                    // カーソル非表示
+                    cursorController.Hide();
                 }
             }
         }
