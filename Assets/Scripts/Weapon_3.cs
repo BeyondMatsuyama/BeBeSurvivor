@@ -7,13 +7,17 @@ using UnityEngine;
 /// </summary>
 public class Weapon_3 : WeaponBase
 {
+    private enum Mode { None, Active, Wait };
+    private Mode mode = Mode.None;
+
     // 同時出現数（３レベル）
     private readonly int[] simultaneous = { 1, 2, 3 };
     private readonly float[] relativeAngles = { 0.0f, 180.0f, 120.0f };
-    private readonly int[] hitMaxes = { 5, 20, 40 };
-    private int curHit = 0;
-    private readonly int waitTime = 5;
-    private bool isCoolTime = false;
+
+    // 発生時間と待機時間
+    private readonly int ActiveTime = 10;
+    private readonly int WaitTime = 5;
+    private float curTime = 0.0f;
 
     // 生成済みの鎌
     private List<GameObject> sickles = new List<GameObject>();
@@ -29,13 +33,6 @@ public class Weapon_3 : WeaponBase
         int existNum = sickles.Count;
         // 生成する鎌の数を取得
         int num = simultaneous[GetLevel()];
-
-        // クールタイム中なら解除する
-        if(isCoolTime)
-        {
-            isCoolTime = false;
-            StopCoroutine(WaitActive());
-        }
 
         for(int i=0 ; i<num ; i++)
         {
@@ -55,67 +52,75 @@ public class Weapon_3 : WeaponBase
             {
                 sickle = Instantiate(prefab, parent);
                 sickles.Add(sickle);
-                sickle.name = "Sickle_" + i;
-
-                // 当たり判定を監視し、
-                sickle.GetComponent<Sickle>().OnHit.AddListener(() => Hit(sickle));                
+                sickle.name = "Sickle_" + i;      
             }
             // 初期化
             rot = relativeAngles[GetLevel()] * i;
             sickle.GetComponent<Sickle>().Initialize(player, rot);
+
+            SoundManager.Instance.PlaySE(SoundManager.SE.Melee0);
         }
 
         // 生成済みの鎌の数が生成する鎌の数より多い場合は、削除
-        for(int i=num ; i<existNum ; i++)
+        for(int i=existNum-1 ; i>=num ; i--)
         {
             Destroy(sickles[i]);
             sickles.RemoveAt(i);
         }
+
+        // アクティブから再生
+        mode    = Mode.Wait;
+        curTime = WaitTime;
+    }
+
+    private void Update()
+    {
+        if(!isActive)
+        {
+            mode = Mode.None;
+            return;
+        }
+        if(mode == Mode.None) return;
+        if(GameController.isPause) return;
+
+        curTime += Time.deltaTime;
+        float time = (mode == Mode.Active) ? ActiveTime : WaitTime;
+        if(curTime >= time)
+        {
+            if(mode == Mode.Active)
+            {
+                toWait();
+                mode = Mode.Wait;
+            }
+            else
+            {
+                toActive();
+                mode = Mode.Active;
+            }
+            curTime = 0.0f;
+        }
+
     }
 
     /// <summary>
-    /// 当たり判定が発生したら呼ばれる
+    /// アクティブ時間
     /// </summary>
-    /// <param name="sickle"></param>
-    private void Hit(GameObject sickle)
+    private void toActive()
     {
-        if(isCoolTime) return;
-
-        curHit++;
-        // デバッグログ（名称・ヒット数）
-        // Debug.Log(sickle.name + " Hit: " + curHit);
-
-        if(curHit >= hitMaxes[GetLevel()])
+        for(int i=0 ; i<sickles.Count ; i++)
         {
-            // デバッグログ（レベル・ヒット数・最大ヒット数）
-            // Debug.Log("Level: " + GetLevel() + " Hit: " + curHit + " Max: " + hitMaxes[GetLevel()]);
-
-            // ヒット数をリセット
-            curHit = 0;
-            // 武器を非アクティブにする
-            for(int i=0 ; i<sickles.Count ; i++)
-            {
-                sickles[i].SetActive(false);
-            }
-
-            // 待機時間後に再度アクティブにする
-            isCoolTime = true;
-            StartCoroutine(WaitActive());
+            sickles[i].SetActive(true);
         }
     }
 
     /// <summary>
     /// 使用不可時間
     /// </summary>
-    /// <returns>こルーチン</returns>
-    private IEnumerator WaitActive()
+    private void toWait()
     {
-        yield return new WaitForSeconds(waitTime);
-
         for(int i=0 ; i<sickles.Count ; i++)
         {
-            sickles[i].SetActive(true);
+            sickles[i].SetActive(false);
         }
-        isCoolTime = false;
     }
 }

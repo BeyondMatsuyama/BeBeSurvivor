@@ -48,7 +48,7 @@ public class Weapon_1 : WeaponBase
             Vector2 dir;
             if(enemy)   // エネミーが存在する場合
             {
-                dir = enemy.transform.position - playerController.GetPosition();
+                dir = enemy.transform.localPosition - playerController.GetPosition();
                 playerController.SetDirection(dir.normalized);   // プレイヤーの向きを設定
             }
             else        // エネミーが存在しない場合
@@ -58,6 +58,8 @@ public class Weapon_1 : WeaponBase
 
             // 弾発射
             fire(dir.normalized);
+
+            SoundManager.Instance.PlaySE(SoundManager.SE.Range);
         }
     }
 

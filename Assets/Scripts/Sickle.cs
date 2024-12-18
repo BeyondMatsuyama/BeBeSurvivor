@@ -1,23 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// 鎌（農具）
 /// </summary>
 public class Sickle : MonoBehaviour
 {
-/*
-    void Start()
-    {
-        // 初期化
-        Initialize(0.0f);
-    }
-*/
-
     // 半径
-    public const float Radius = 4.0f;
+    public const float Radius = 3.5f;
     // 回転速度（秒間）
     private const float RotateSpeed = 180f;
     // 自転速度（秒間）
@@ -63,7 +54,7 @@ public class Sickle : MonoBehaviour
 
         // 位置を更新
         Vector2 pos = player.Position;
-        transform.position = new Vector3(
+        transform.localPosition = new Vector3(
             pos.x + Radius * Mathf.Cos(rad),
             pos.y + Radius * Mathf.Sin(rad),
             0.0f
@@ -72,32 +63,5 @@ public class Sickle : MonoBehaviour
         // 回転を更新
         transform.rotation = Quaternion.Euler(0.0f, 0.0f, spinAngle);
     }
-
-    /// <summary>
-    /// コライダーが当たったら最初に呼ばれる
-    /// </summary>
-    /// <param name="collision">相手側の情報が格納される</param>
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // Enemy に当たったら消滅
-        if (collision.tag == "Enemy")
-        {
-            Enemy enemy = collision.GetComponent<Enemy>();
-            // 対象のエネミーが未カウントの場合
-            if (!enemy.IsCounted)
-            {
-                // デバッグログ（自オブジェクトとヒットしたオブジェクトの名称）
-                // Debug.Log(this.name + " Hit " + collision.name);
-
-                // カウント
-                enemy.IsCounted = true;
-                // 親オブジェクトへ通知
-                OnHit.Invoke();
-            }
-        }
-    }
-
-    // ヒット時に呼ばれるイベント
-    public UnityEvent OnHit = new UnityEvent();
 
 }

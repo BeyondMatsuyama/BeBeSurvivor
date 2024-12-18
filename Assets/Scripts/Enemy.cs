@@ -13,19 +13,33 @@ public class Enemy : BaseCharacter
     {
         Init = 0,
         Alive,
+        Hit,
         Dead
     }
     private Status status = Status.Init;
     public Status CurStatus { get => status; }
 
-    // 討伐カウントフラグ
-    private bool isCounted = false;
-    public bool IsCounted { get => isCounted; set => isCounted = value;}
+    // タイプ
+    public enum Type
+    {
+        Normal_1 = 0,
+        Normal_2,
+        Boss
+    }
+
+    // パラメータ
+    [System.Serializable]
+    private struct TypeParam
+    {
+        public Type  type;
+        public int   hp;
+        public float speed;
+    }
+    [SerializeField] private TypeParam param;
 
     // 歩きパラメータ
     private const float MinInterval = 1.0f;
     private const float MaxInterval = 5.0f;
-    private const float WalkSpeed = 0.5f;
 
     // 歩き情報
     private struct Walk
@@ -47,6 +61,8 @@ public class Enemy : BaseCharacter
     }
     private NockBack nockBack;
 
+    private float deadTime = 0.0f;
+
     private ExpController expController;
 
     /// <summary>
@@ -61,13 +77,40 @@ public class Enemy : BaseCharacter
             case Status.Alive:
                 walk();
                 break;
-            case Status.Dead:
-                // 死亡アニメーション中
+            case Status.Hit:
+                // ノックバック中
                 if(nockBack.isNockBack)
                 {
                     nockBack.timer -= Time.deltaTime;
                     if(nockBack.timer < 0) nockBack.isNockBack = false;
                     this.transform.localPosition += new Vector3(nockBack.dir.x * nockBack.speed * Time.deltaTime, nockBack.dir.y * nockBack.speed * Time.deltaTime, 0);
+                    break;  // ノックバック中はアニメーション判定しない
+                }
+
+                // アニメーションの終了を待つ
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.IsName("hit") && stateInfo.normalizedTime >= 1.0f)
+                {
+                    param.hp -= 10;   // ダメージ値（仮）
+                    if(param.hp > 0)
+                    {
+                        setStatus(Status.Alive);
+                    }
+                    else
+                    {
+                        setStatus(Status.Dead);
+                    }
+                }
+                break;
+            case Status.Dead:
+                // status:dead, hp:0 でオブジェクトが消えないケースが存在する
+                // そのため、一定時間経過後に強制的に消す
+                // added 2024.12.5
+                deadTime += Time.deltaTime;
+                if(deadTime > 1.0f)
+                {
+                    // Debug.Log("Enemy Dead Time Over: " + this.name);
+                    OnAnimationEnd();
                 }
                 break;
         }
@@ -99,7 +142,7 @@ public class Enemy : BaseCharacter
         if (GameController.isPause) return;
 
         // 歩く
-        this.transform.localPosition += new Vector3(walkInfo.course.x * WalkSpeed * Time.deltaTime, walkInfo.course.y * WalkSpeed * Time.deltaTime, 0);
+        this.transform.localPosition += new Vector3(walkInfo.course.x * param.speed * Time.deltaTime, walkInfo.course.y * param.speed * Time.deltaTime, 0);
         // タイマー更新
         walkInfo.timer -= Time.deltaTime;
         // タイマーが０以下になったら再設定
@@ -115,7 +158,7 @@ public class Enemy : BaseCharacter
     /// </summary>
     private void setWalkDirection()
     {
-        walkInfo.course = (walkInfo.player.Position - this.transform.position).normalized;
+        walkInfo.course = (walkInfo.player.Position - this.transform.localPosition).normalized;
         SetDirection(walkInfo.course);
     }
 
@@ -125,21 +168,22 @@ public class Enemy : BaseCharacter
     /// <param name="collision">相手側の情報が格納される</param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 死んでいる場合は無視
-        if (status == Status.Init || status == Status.Dead) return;
-
-        // Weapon に当たったら消滅
-        if (collision.tag == "Weapon")
+        // status が Alive の場合のみ
+        if (status == Status.Alive) 
         {
-            // Debug.Log("Enemy Hit : " + collision.name);
+            // Weapon に当たったらダメージ
+            if (collision.tag == "Weapon")
+            {
+                // アニメーションの status を変更
+                setStatus(Status.Hit);
 
-            // アニメーションの status を変更
-            status = Status.Dead;
-            animator.SetInteger("status", (int)status);
+                // 武器と反対方向へノックバック
+                Vector2 dir = (this.transform.localPosition - collision.transform.localPosition).normalized;
+                setNockBack(dir);
 
-            // 武器と反対方向へノックバック
-            Vector2 dir = (this.transform.position - collision.transform.position).normalized;
-            setNockBack(dir);
+                SoundManager.SE seNo = (param.type == Type.Normal_1) ? SoundManager.SE.Hit0 : SoundManager.SE.Hit1;
+                SoundManager.Instance.PlaySE(seNo);
+            }
         }
     }
 
@@ -162,7 +206,7 @@ public class Enemy : BaseCharacter
         // 死亡アニメーションが終わったら消滅
         if (status == Status.Dead) 
         {
-            expController.Spawn(this.transform.position);
+            expController.Spawn(param.type, this.transform.localPosition);
             Destroy(this.gameObject);
         }
     }
@@ -172,6 +216,13 @@ public class Enemy : BaseCharacter
     private void OnDestroy()
     {
         OnDead.Invoke();
+    }
+
+    // ステータス（アニメーション）更新
+    private void setStatus(Status status)
+    {
+        this.status = status;
+        animator.SetInteger("status", (int)status);
     }
 
 }

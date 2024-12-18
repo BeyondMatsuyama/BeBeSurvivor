@@ -20,22 +20,32 @@ public class GameController : MonoBehaviour
     [SerializeField] ExpController expController;
     // フィールドワーク
     [SerializeField] FieldController fieldController;
-
-    // 画面サイズ
-    static  Vector2 screenSize = new Vector2(1284, 2788);
-    // 中心座標（左下原点）
-    private Vector2 centerAxis = new Vector2(screenSize.x / 2, screenSize.y / 2);
+    // ヘッダ情報
+    [SerializeField] HeaderController headerController;
+    // リザルト情報
+    [SerializeField] ResultController resultController;
+    // カーソル制御
+    [SerializeField] CursorController cursorController;
+    
     // 長押し判定時間（sec）
     private const float HoldTime = 0.5f;
     // 長押し判定変数
     private float holdTime = HoldTime;
 
     // 武器のレベルポイントが閾値を超えたら、武器レベルアップ（初期レベルは１で、９レベルまで）
-    private readonly int[] levelThreshold = { 0, 5, 10, 20, 30, 40, 60, 80, 100, 65535 };
+    private readonly int[] levelThreshold = { 0, 10, 25, 50, 100, 200, 300, 400, 500, 65535 };
+
+    // 討伐数の閾値
+    private const int DefeatThreshold = 2000;
 
     // ポーズフラグ
     public static bool isPause = false;
     private int curLevelPoint = 0;
+
+    void Start()
+    {
+        SoundManager.Instance.PlayBGM(SoundManager.BGM.Game);
+    }
 
     /// <summary>
     /// フレームワーク
@@ -47,11 +57,16 @@ public class GameController : MonoBehaviour
             // プレイヤー移動処理
             if(onMove())
             {
-                // カメラを追従させる
+                // プレイヤー位置
                 Vector3 pos = playerController.GetPosition();
-                pos.z = -1.0f;
-                mainCamera.gameObject.transform.localPosition = pos;
+                // カメラの移動制限
+                Vector2 camPos = fieldController.GetCameraPosition(new Vector2(pos.x, pos.y));
+                // カメラ位置更新
+                mainCamera.gameObject.transform.localPosition = new Vector3(camPos.x, camPos.y, -1.0f);
             }
+
+            // ヘッダの経験値ゲージ更新
+            headerController.SetExpGauge(expController.GetExpNum, levelThreshold[weaponController.GetLevelPoint()]);
 
             // 武器レベルアップ処理
             if(expController.GetExpNum >= levelThreshold[weaponController.GetLevelPoint()])
@@ -62,6 +77,48 @@ public class GameController : MonoBehaviour
                 curLevelPoint = weaponController.GetLevelPoint();
                 // レベルアップボードを表示
                 weaponBoard.ShowBoard();
+                // カーソル非表示
+                cursorController.Hide();
+
+                SoundManager.Instance.PlaySE(SoundManager.SE.LevelUp);
+            }
+
+            // 死亡処理
+            if(playerController.IsDead())
+            {
+                // ポーズ
+                isPause = true;
+                // リザルト表示（ゲームオーバー）
+                resultController.Show(false, headerController.TimeValue, headerController.DefeatCount);
+
+                SoundManager.Instance.PlaySE(SoundManager.SE.Lose);
+            }
+            // クリア判定
+            else
+            {
+                // 討伐数が一定数を超えたらクリア
+                if(headerController.DefeatCount >= DefeatThreshold)
+                {
+                    // ポーズ
+                    isPause = true;
+                    // リザルト表示（クリア）
+                    resultController.Show(true, headerController.TimeValue, headerController.DefeatCount);
+                    // カーソル非表示
+                    cursorController.Hide();
+
+                    SoundManager.Instance.PlaySE(SoundManager.SE.Win);
+                }
+            }
+        }
+        else
+        {
+            if(resultController.ToTitle)
+            {
+                SoundManager.Instance.StopBGM();
+                SoundManager.Instance.StopSE();
+
+                // タイトルシーンへ戻る
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
             }
         }
     }
@@ -84,9 +141,18 @@ public class GameController : MonoBehaviour
     {
         bool moved = false;
         var mouse = Mouse.current;
-        if(mouse.press.ReadValue() == 1)    // press 状態
+
+        // 押された瞬間
+        if(mouse.press.wasPressedThisFrame)
         {
-            if(holdTime > 0.0f)                 // 待機
+            Vector2 pos = mouse.position.ReadValue();
+            cursorController.SetCenter(pos);
+            // Debug.Log("press : "+pos);
+        }
+        // 押したまま
+        else if(mouse.press.isPressed)
+        {
+            if(holdTime > 0.0f)                 // 一定時間待機
             {
                 holdTime -= Time.deltaTime;
                 if(holdTime < 0.0f) holdTime = 0.0f;
@@ -95,17 +161,23 @@ public class GameController : MonoBehaviour
             {
                 // タッチ座標から移動方向のベクトルを求める
                 Vector2 pos = mouse.position.ReadValue();
-                Vector2 vec = (pos - centerAxis).normalized;
+                Vector2 vec = (pos - cursorController.Center).normalized;
+                // Debug.Log("repeated");                
                 // Debug.Log("vec:"+vec);
 
+                // カーソル更新
+                cursorController.UpdatePosition(pos);
                 // プレイヤーへ渡す
                 playerController.Move(vec);
-                moved = true;
+                moved = true;                
             }
         }
-        else                                // release 状態
+        // 離した瞬間
+        else if(mouse.press.wasReleasedThisFrame)
         {
             holdTime = HoldTime;
+            cursorController.Hide();
+            // Debug.Log("release");
         }
 
         return moved;
