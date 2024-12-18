@@ -109,8 +109,14 @@ public class ExpController : MonoBehaviour
                     {
                         pull(obj, false);
                     }
-    }
+                }
                 break;
+        }
+
+        // 対象が経験値の場合、SE 再生
+        if(exp.type == Type.Exp_S || exp.type == Type.Exp_M || exp.type == Type.Exp_L)
+        {
+            SoundManager.Instance.PlaySE(SoundManager.SE.Coin1);
         }
 
         // リストから破棄

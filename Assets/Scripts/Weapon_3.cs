@@ -57,6 +57,8 @@ public class Weapon_3 : WeaponBase
             // 初期化
             rot = relativeAngles[GetLevel()] * i;
             sickle.GetComponent<Sickle>().Initialize(player, rot);
+
+            SoundManager.Instance.PlaySE(SoundManager.SE.Melee0);
         }
 
         // 生成済みの鎌の数が生成する鎌の数より多い場合は、削除

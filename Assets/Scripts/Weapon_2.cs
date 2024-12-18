@@ -40,6 +40,8 @@ public class Weapon_2 : WeaponBase
 
             // 弾発射
             StartCoroutine(fire());
+
+            SoundManager.Instance.PlaySE(SoundManager.SE.Melee1);
         }
     }
 

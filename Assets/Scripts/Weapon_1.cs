@@ -58,6 +58,8 @@ public class Weapon_1 : WeaponBase
 
             // 弾発射
             fire(dir.normalized);
+
+            SoundManager.Instance.PlaySE(SoundManager.SE.Range);
         }
     }
 
