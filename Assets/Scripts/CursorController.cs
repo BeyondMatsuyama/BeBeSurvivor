@@ -29,6 +29,7 @@ public class CursorController : MonoBehaviour
     {
         this.center = center;
         parts[(int)Parts.Base].transform.localPosition = center;
+        UpdatePosition(center); // カーソル初期位置
         activate(true);
     }
 
@@ -39,7 +40,7 @@ public class CursorController : MonoBehaviour
     public void UpdatePosition(Vector2 pos)
     {
         // タッチ座標に応じて Dir の位置を調整
-        Vector2 offset = (pos - center).normalized * 8.0f;
+        Vector2 offset = (pos - center).normalized * 26.0f;
         parts[(int)Parts.Dir].transform.localPosition = offset;
     }
 

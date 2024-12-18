@@ -30,6 +30,8 @@ public class Player : BaseCharacter
 
     // 武器１オブジェクト（デフォルト武器）
     [SerializeField] private GameObject weapon_1;
+    // フィールド制御
+    [SerializeField] private FieldController fieldController;
 
     // 初期化
     new void Start() {
@@ -73,10 +75,8 @@ public class Player : BaseCharacter
         Vector3 pos = this.transform.localPosition + new Vector3(val.x, val.y, 0);
 
         // 移動範囲制限（FieldController で生成したフィールドの範囲）により、pos を制限
-        if(pos.x > fieldLimit.x) pos.x  = fieldLimit.x;
-        if(pos.x < -fieldLimit.x) pos.x = -fieldLimit.x;
-        if(pos.y > fieldLimit.y) pos.y  = fieldLimit.y;
-        if(pos.y < -fieldLimit.y) pos.y = -fieldLimit.y;
+        Vector2 limitPos = fieldController.GetPlayerPosition(new Vector2(pos.x, pos.y));
+        pos = new Vector3(limitPos.x, limitPos.y, 0);
         this.transform.localPosition    = pos;
 
         // HpGauge の位置をプレイヤーに追従
