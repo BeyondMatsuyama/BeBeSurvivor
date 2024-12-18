@@ -21,7 +21,7 @@ public class SoundManager : MonoBehaviour
 
     public enum BGM
     {
-        Title = 0,
+        Game = 0,
 
         Num
     }
@@ -40,6 +40,8 @@ public class SoundManager : MonoBehaviour
         Win,
         Lose,
         Dead,
+        Coin1,
+        Coin2,
 
         Num
     }
@@ -47,16 +49,20 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip[] se;
     private AudioSource seSource;
 
+    // ヒット音とコイン音が大量にならないためのリミッター
+    private float seBaseTime = 0f;
+    private int seCount = 0;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.loop = true;
-        bgmSource.volume = 0.5f;
+        bgmSource.volume = 0.2f;
 
         seSource = gameObject.AddComponent<AudioSource>();
         seSource.loop = false;
-        seSource.volume = 0.8f;
+        seSource.volume = 0.7f;
 
         DontDestroyOnLoad(this);
     }
@@ -73,12 +79,45 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySE(SE se)
     {
-        seSource.PlayOneShot(this.se[(int)se]);
+        if(canSePlayed(se))
+        {
+            seSource.PlayOneShot(this.se[(int)se]);
+        }
     }
     public void StopSE()
     {
         seSource.Stop();
     }
 
+    /// <summary>
+    /// SEが再生可能か（単位時間内に再生できる上限を設ける）
+    /// </summary>
+    /// <param name="se">SE 番号</param>
+    /// <returns>true で再生可能</returns>
+    private bool canSePlayed(SE se)
+    {
+        bool canPlayed = true;
+        if(se == SE.Hit0 || se == SE.Hit1 || se == SE.Coin1 || se == SE.Coin2)
+        {
+            if(seCount == 0)
+            {
+                seBaseTime = Time.time;
+            }
+
+            if(Time.time - seBaseTime < 0.2f)
+            {
+                seCount++;
+                if(seCount > 2)
+                {
+                    canPlayed = false;
+                }
+            }
+            else
+            {
+                seCount = 0;
+            }
+        }
+        return canPlayed;
+    }
 
 }

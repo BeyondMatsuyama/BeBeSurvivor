@@ -180,6 +180,9 @@ public class Enemy : BaseCharacter
                 // 武器と反対方向へノックバック
                 Vector2 dir = (this.transform.localPosition - collision.transform.localPosition).normalized;
                 setNockBack(dir);
+
+                SoundManager.SE seNo = (param.type == Type.Normal_1) ? SoundManager.SE.Hit0 : SoundManager.SE.Hit1;
+                SoundManager.Instance.PlaySE(seNo);
             }
         }
     }

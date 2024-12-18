@@ -42,6 +42,11 @@ public class GameController : MonoBehaviour
     public static bool isPause = false;
     private int curLevelPoint = 0;
 
+    void Start()
+    {
+        SoundManager.Instance.PlayBGM(SoundManager.BGM.Game);
+    }
+
     /// <summary>
     /// フレームワーク
     /// </summary>
@@ -74,6 +79,8 @@ public class GameController : MonoBehaviour
                 weaponBoard.ShowBoard();
                 // カーソル非表示
                 cursorController.Hide();
+
+                SoundManager.Instance.PlaySE(SoundManager.SE.LevelUp);
             }
 
             // 死亡処理
@@ -83,6 +90,8 @@ public class GameController : MonoBehaviour
                 isPause = true;
                 // リザルト表示（ゲームオーバー）
                 resultController.Show(false, headerController.TimeValue, headerController.DefeatCount);
+
+                SoundManager.Instance.PlaySE(SoundManager.SE.Lose);
             }
             // クリア判定
             else
@@ -96,6 +105,8 @@ public class GameController : MonoBehaviour
                     resultController.Show(true, headerController.TimeValue, headerController.DefeatCount);
                     // カーソル非表示
                     cursorController.Hide();
+
+                    SoundManager.Instance.PlaySE(SoundManager.SE.Win);
                 }
             }
         }
@@ -103,6 +114,9 @@ public class GameController : MonoBehaviour
         {
             if(resultController.ToTitle)
             {
+                SoundManager.Instance.StopBGM();
+                SoundManager.Instance.StopSE();
+
                 // タイトルシーンへ戻る
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
             }

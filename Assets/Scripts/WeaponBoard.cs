@@ -42,6 +42,8 @@ public class WeaponBoard : MonoBehaviour
                     HideBoard();
                     // ポーズ解除
                     gameController.Resume();
+
+                    SoundManager.Instance.PlaySE(SoundManager.SE.Select);
                 }
             });
         }
